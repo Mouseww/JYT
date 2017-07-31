@@ -168,12 +168,14 @@ namespace LeaRun.Application.Web.Controllers
                     operators.Token = DESEncrypt.Encrypt(Guid.NewGuid().ToString());
                     //写入当前用户数据权限
                     //判断是否系统管理员
-                    if (userEntity.F_Account == "System")
+                    if (userEntity.F_EnCode == "System")
                     {
                         operators.IsSystem = true;
                     }
                     else
                     {
+                        OrganizeEntity organize = new OrganizeBLL().GetEntity(userEntity.OrganizeId);
+                        Session["organize"] = organize;
                         operators.IsSystem = false;
                     }
                     AuthorizeDataModel dataAuthorize = new AuthorizeDataModel();
