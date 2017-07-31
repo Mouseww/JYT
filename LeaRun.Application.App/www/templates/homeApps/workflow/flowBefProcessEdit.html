@@ -1,0 +1,89 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-stable nav-bar-block nav-title-slide-ios7">
+    <button class="button button-clear " ng-click="closeEditModal()"><i class="icon ion-ios-close-empty"></i></button>
+    <h1 class="title">{{editTitle}}</h1>
+    <button class="button button-clear" ng-click="doSubmit()">提交</button>
+  </ion-header-bar>
+  <ion-content>
+    <ion-list class="lr-list-form">
+      <div class="item item-divider">
+        流程实例编号
+      </div>
+      <ion-item class="item-input">
+        <input type="text" ng-model="editData.f_code" readonly="readonly" style="background-color: #fff;text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        自定义标题
+      </div>
+      <ion-item class="item-input">
+        <!--<div class="lr-form-input"><i class="icon iconfont">&#xe616;</i>添加自定义标题</div>
+        <input type="text" ng-model="editData.CustomName" ng-class="{'active' : isInputActive('CustomName')}" />-->
+        <input type="text" ng-model="editData.f_customname" readonly="readonly" style="background-color: #fff;text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        请假事由
+      </div>
+      <ion-item ng-click="openFlowReasonModal()">
+        <div class="lr-form-select" ng-hide="editData.f_wfReason != null"><i class="icon ion-ios-drag"></i>添加请假事由</div>
+        <div class="item-icon-right" ng-hide="editData.f_wfReason == null">
+          <div class="lr-form-label balanced-bg">{{editData.f_wfReason}}</div>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </div>
+      </ion-item>
+      <div class="item item-divider">
+        请假原因
+      </div>
+      <ion-item class="item-input">
+        <div class="lr-form-input"><i class="icon ion-ios-pricetag-outline"></i>添加请假原因</div>
+        <textarea rows="3" ng-model="editData.whyflow" />
+      </ion-item>
+      <div class="item item-divider">
+        开始时间
+      </div>
+      <ion-item class="item-input">
+        <input type="datetime-local" ng-model="editData.begintime" value="2016-01-20T10:00" style="text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        结束时间
+      </div>
+      <ion-item class="item-input">
+        <input type="datetime-local" ng-model="editData.endtime" value="2016-01-20T10:00" style="text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        请假天数
+      </div>
+      <ion-item class="item-input">
+        <div class="lr-form-input"><i class="icon ion-ios-telephone-outline"></i>添加请假天数</div>
+        <input type="text" ng-model="editData.qnum" ng-class="{'active' : editData.qnum}"  />
+      </ion-item>
+      <div class="item item-divider">
+        申请人员
+      </div>
+      <ion-item class="item-input">
+        <input type="text" ng-model="editData.f_createusername"  readonly="readonly" style="background-color: #fff;text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        申请备注
+      </div>
+      <ion-item class="item-input">
+        <input type="text" ng-model="editData.f_description"  readonly="readonly" style="background-color: #fff;text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        审核人员<span>*</span>
+      </div>
+      <ion-item class="item-input">
+        <input type="text" ng-model="editData.realname"  readonly="readonly" style="background-color: #fff;text-align: center;" />
+      </ion-item>
+      <div class="item item-divider">
+        审核结果<span>*</span>
+      </div>
+      <ion-item ng-click="openFlowVerificationModal()">
+        <div class="lr-form-select" ng-hide="editData.f_wfVerification != null"><i class="icon ion-ios-drag"></i>请选择审核结果</div>
+        <div class="item-icon-right" ng-hide="editData.f_wfVerification == null">
+          <div class="lr-form-label balanced-bg">{{editData.f_wfVerification}}</div>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-modal-view>

@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "查看流程进度";
+    Layout = "~/Views/Shared/_FlowForm.cshtml";
+}
+<script>
+    var processId = request('processId');
+    $(function () {
+        var schemeContent, formContent = {};
+        $.SetForm({
+            url: "../../FlowManage/FlowMyProcess/GetProcessNodeJson",
+            param: { keyValue: processId},
+            success: function (data) {
+
+                $.each(data.formEntityList, function (id, item) {
+                    formContent[item.F_FrmId] = JSON.parse(item.F_FrmContent);
+                });
+                $.each(formContent, function (i, item) {
+                    if (item.type == 2) {
+                        $('#FormPanel').html('<iframe id="formIframe_' + i + '" frameborder="no" border="0" marginwidth="0" marginheight="0" style="height:100%;width:100%;"></iframe>');
+                        learun.loadSystemForm('formIframe_' + i, item.data.url + "?processId=" + processId);
+                        $('#FormPanel').height($.windowHeight() - 50);
+                    }
+                    else {
+                        $('#FormPanel').formRendering('init', { formData: item.data });
+                        $('#FormPanel').formRendering('set', { data: JSON.parse(data.dFormData[i].F_FrmInstanceJson) });
+                        $('#FormPanel').find('input,select,textarea,.ui-select').attr('disabled', 'disabled');
+                    }
+                });
+                $('#FlowPanel').flowDesigner({
+                    width: $(window).width()+3,
+                    height: $(window).height()-42,
+                    schemeContent: JSON.parse(data.processSchemeEntity.F_SchemeContent),
+                    haveTool: false,
+                    isprocessing: true,
+                    nodeData: data.nodeList
+                });
+            }
+        });
+    });
+</script>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#FlowPanel" data-toggle="tab">流程信息</a></li>
+    <li><a href="#FormPanel" data-toggle="tab">表单信息</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="FlowPanel" class="tab-pane active">
+    </div>
+    <div id="FormPanel" class="tab-pane">
+    </div>
+</div>
+<style>
+    body {
+        overflow: hidden;
+    }
+</style>

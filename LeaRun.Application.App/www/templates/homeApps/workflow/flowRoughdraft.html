@@ -1,0 +1,46 @@
+﻿<ion-modal-view ng-controller="flowRoughdraftCtrl">
+    <ion-header-bar class="bar-stable  nav-bar-block nav-title-slide-ios7">
+        <button class="button button-clear " ng-click="closeFlowPageModel()"><i class="icon ion-ios-arrow-left"></i></button>
+        <h1 class="title">草稿流程</h1>
+    </ion-header-bar>
+    <div class="bar bar-subheader lr-subheader">
+        <div class="lr-left-tool">
+            <div class="lr-down-select">
+                <span>全部</span><span class="num">{{dat.records}}条</span><span>
+                    <i class="icon ion-ios-arrow-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <ion-content delegate-handle="flowRoughdraftlist-content">
+        <ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
+        <div class="list  list-inset lr-list-type2" style="margin-top:40px;">
+            <ion-list>
+                <ion-item ng-repeat="flow in dat.flowroughdrafts"  type="item-text-wrap" class="item-icon-right mt10" ng-click="openDetailsModal(flow.flowId)">
+                  <div class="row" style=" margin-bottom: 10px;">
+                    <div class="col-75">
+                        <span class=" lr-title">
+                           <span style="color: #1231a5;">{{flow.f_code}}</span>/{{flow.f_createusername}}
+                        </span>
+                    </div>
+                    <div class="col-25">
+                        <span class=" lr-title" style="text-align:left;">
+                            {{flow.f_createdate}}
+                        </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-20">
+                        <span class="lr-title">
+                            <div class="lr-label calm-bg">{{flow.f_schemetypename}}</div>
+                        </span>
+                    </div>
+                  </div>
+                  <i class="icon ion-ios-arrow-right icon-accessory "></i>
+                  <ion-option-button ng-click="doDelete(flow)"><span class="lr-trash-circled"><i class="icon ion-ios-trash-outline"></i></span></ion-option-button>
+                </ion-item>
+            </ion-list>
+        </div>
+        <ion-infinite-scroll ng-if="dat.moredata" on-infinite="doLoadMore()" distance="1%"></ion-infinite-scroll>
+    </ion-content>
+</ion-modal-view>

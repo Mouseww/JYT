@@ -1,0 +1,31 @@
+<ion-modal-view ng-controller="lrReceivableReportCtrl">
+  <ion-header-bar class="bar-stable nav-bar-block nav-title-slide-ios7">
+    <button class="button button-clear " ng-click="closePageModel()"><i class="icon ion-ios-arrow-left"></i></button>
+    <h1 class="title">收款报表</h1>
+  </ion-header-bar>
+  <ion-content delegate-handle="receivableReportlist-content">
+    <ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
+    <!--<div class="list list-inset lr-list-type3">-->
+      <!--<div class="item item-icon-left mb10" ng-repeat="order in data.receivableReports" class="mt10" ng-click="openDetailsModal(order.f_ReceivableId)">-->
+        <!--<i class="icon ion-ios-folder-outline {{order.f_OrderbgColor}}"></i>-->
+        <!--<span>{{order.f_ReceivableId}}</span>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div class="list  list-inset lr-list-type2" style="margin-top:10px;">
+      <ion-list>
+        <ion-item ng-repeat="order in data.receivableReports" class="item-remove-animate mt10" ng-click="openDetailsModal(order.f_ReceivableId)">
+          <div class="row">
+            <div class="col-67"><span class="lr-title">{{order.f_CustomerName}}</span></div>
+            <div class="col-33"><span class="lr-title" style="text-align:right;">{{order.f_PaymentTime}}</span></div>
+          </div>
+          <div class="row">
+            <div class="col-33"><div class="lr-label {{order.f_OrderbgColor}}" style="height: 20px;">{{order.f_OrderCode}}</div></div>
+            <div class="col-33 lr-item-content"><p><i class="icon iconfont balanced">&#xe616;</i><span>{{order.f_PaymentPrice}}元</span></p></div>
+          </div>
+          <ion-option-button ng-click="doDelete(order)"><span class="lr-trash-circled"><i class="icon ion-ios-trash-outline"></i></span></ion-option-button>
+        </ion-item>
+      </ion-list>
+    </div>
+    <ion-infinite-scroll ng-if="data.moredata" on-infinite="doLoadMore()" distance="1%"></ion-infinite-scroll>
+  </ion-content>
+</ion-modal-view>

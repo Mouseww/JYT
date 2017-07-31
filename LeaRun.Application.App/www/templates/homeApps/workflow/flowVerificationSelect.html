@@ -1,0 +1,15 @@
+<ion-view>
+  <ion-header-bar class="bar-positive nav-bar-block">
+    <button class="button button-clear button-primary" ng-click="closeFlowVerificationModal()"><i class="icon ion-ios-close-empty"></i></button>
+    <h1 class="title" style=" text-align:left;">目录</h1>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list lr-list-radio">
+      <ion-radio ng-repeat="item in flowVerificationSideList"
+                 ng-value="item.text"
+                 ng-model="editData.f_wfVerification" ng-change="flowVerificationChangeServer(item)" style="margin:10px;">
+        <div class=" {{item.bgColor}}">{{ item.text }}</div>
+      </ion-radio>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,31 @@
+<ion-modal-view ng-controller="lrReceivableCtrl">
+  <ion-header-bar class="bar-stable nav-bar-block nav-title-slide-ios7">
+    <button class="button button-clear " ng-click="closePageModel()"><i class="icon ion-ios-arrow-left"></i></button>
+    <h1 class="title">收款管理</h1>
+  </ion-header-bar>
+  <ion-content delegate-handle="receivablelist-content">
+    <ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
+    <!--<div class="list list-inset lr-list-type3">-->
+      <!--<div class="item item-icon-left mb10" ng-repeat="order in data.receivables" class="mt10" ng-click="openDetailsModal(order.f_OrderId)">-->
+        <!--<i class="icon ion-ios-folder-outline {{order.f_OrderbgColor}}"></i>-->
+        <!--<span>{{order.f_CustomerName}}</span>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div class="list  list-inset lr-list-type2" style="margin-top:10px;">
+      <ion-list>
+        <ion-item ng-repeat="order in data.receivables" class="item-remove-animate mt10" ng-click="openDetailsModal(order.f_OrderId)">
+          <div class="row">
+            <div class="col-67"><span class="lr-title">{{order.f_CustomerName}}</span></div>
+            <div class="col-33"><span class="lr-title" style="text-align:right;">{{order.f_PaymentDate}}</span></div>
+          </div>
+          <div class="row">
+            <div class="col-46"><div class="lr-label {{order.f_OrderbgColor}}">{{order.f_OrderCode}}</div></div>
+            <div class="col-46 lr-item-content"><p><i class="icon ion-ios-person positive"></i><span>{{order.f_CreateUserName}}</span></p><p><i class="icon iconfont balanced">&#xe616;</i><span>{{order.f_Accounts}}元</span></p></div>
+          </div>
+          <ion-option-button ng-click="doDelete(order)"><span class="lr-trash-circled"><i class="icon ion-ios-trash-outline"></i></span></ion-option-button>
+        </ion-item>
+      </ion-list>
+    </div>
+    <ion-infinite-scroll ng-if="data.moredata" on-infinite="doLoadMore()" distance="1%"></ion-infinite-scroll>
+  </ion-content>
+</ion-modal-view>

@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "新闻管理";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script src="~/Content/scripts/plugins/ckeditor/ckeditor.js"></script>
+<script>
+    var keyValue = request('keyValue');
+    var category = request('category');
+    var editor = null;
+    $(function () {
+        //初始化编辑器
+        //CKEDITOR.replace("F_NewsContent", { toolbar: 'Basic', height: 330 });
+         CKEDITOR.replace('F_NewsContent',{ toolbar: 'Basic', height: 330 });
+        initControl();
+    })
+    //初始化控件
+    function initControl() {
+        //栏目
+        $("#F_Category").ComboBox({
+            param: { EnCode: "NewsCategory" },
+            url: "../../SystemManage/DataItemDetail/GetDataItemListJson",
+            description: "==请选择==",
+            id: "F_ItemValue",
+            text: "F_ItemName",
+            height: "230px"
+        });
+        //获取表单
+        if (!!keyValue) {
+            $.SetForm({
+                url: "../../PublicInfoManage/News/GetFormJson",
+                param: { keyValue: keyValue },
+                success: function (data) {
+                    $("#form1").SetWebControls(data);
+                    $("#F_NewsContent").html(data.F_NewsContent);
+                    
+                }
+            });
+        } else {
+            $("#Category").ComboBoxTreeSetValue(category);
+        }
+    }
+    //保存表单
+    function AcceptClick() {
+        if (!$('#form1').Validform()) {
+            return false;
+        }
+        console.log('editor', editor)
+        var postData = {
+            F_FullHead: $("#F_FullHead").val(),
+            F_Category: $("#F_Category").attr('data-value'),
+            F_ReleaseTime: $("#F_ReleaseTime").val(),
+            F_AuthorName: $("#F_AuthorName").val(),
+            F_CompileName: $("#F_CompileName").val(),
+            F_TagWord: $("#F_TagWord").val(),
+            F_Keyword: $("#F_Keyword").val(),
+            F_NewsContent: CKEDITOR.instances.F_NewsContent.getData()
+        }
+        $.SaveForm({
+            url: "../../PublicInfoManage/News/SaveForm?keyValue=" + keyValue,
+            param: postData,
+            loading: "正在保存数据...",
+            success: function () {
+                $.currentIframe().$("#gridTable").trigger("reloadGrid");
+            }
+        });
+        //创建一个流程
+        //learun.createProcess({
+        //    processName: "新闻流程",
+        //    level: 1,
+        //    description: "",
+        //    formData: ""
+        //}, function (Id) {//将这个ID保存到表单中
+        //    $.SaveForm({
+        //        url: "../../PublicInfoManage/News/SaveForm?keyValue=" + keyValue + "&processId=" + Id,
+        //        param: postData,
+        //        loading: "正在保存数据...",
+        //        success: function () {
+        //            $.currentIframe().$("#gridTable").trigger("reloadGrid");
+        //        }
+        //    });
+        //});
+
+       
+    }
+    function getWfData() {
+        return [{ "field": F_FullHead, "label": 标题, 'type': text }]
+    }
+
+
+</script>
+<div style="margin-top: 20px; margin-right: 30px;">
+    <table class="form" style="table-layout: auto;">
+        <tr>
+            <td class="formTitle">标题<font face="宋体">*</font></td>
+            <td class="formValue" colspan="3">
+                <input id="F_FullHead" type="text" class="form-control" placeholder="请输入标题" isvalid="yes" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">栏目<font face="宋体">*</font></td>
+            <td class="formValue">
+                <div id="F_Category" type="select" class="ui-select"></div>
+            </td>
+            <td class="formTitle">发布时间<font face="宋体">*</font></td>
+            <td class="formValue">
+                <input id="F_ReleaseTime" type="text" class="form-control" value="@LeaRun.Util.Time.GetToday("yyyy/MM/dd HH:mm")" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">作者<font face="宋体">*</font></td>
+            <td class="formValue">
+                <input id="F_AuthorName" type="text" class="form-control" placeholder="请输入作者" isvalid="yes" checkexpession="NotNull" />
+            </td>
+            <td class="formTitle">编辑<font face="宋体">*</font></td>
+            <td class="formValue">
+                <input id="F_CompileName" type="text" class="form-control" placeholder="请输入编辑" isvalid="yes" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">Tag标签</td>
+            <td class="formValue">
+                <input id="F_TagWord" type="text" class="form-control" placeholder="多个标签之间用“,”分隔，最多不超过10个" />
+            </td>
+            <td class="formTitle">关键字</td>
+            <td class="formValue">
+                <input id="F_Keyword" type="text" class="form-control" placeholder="多个关键字之间用“,”分隔，最多不超过10个" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" valign="top" style="padding-top: 4px;">内容</th>
+            <td class="formValue" colspan="3">
+                <textarea id="F_NewsContent" class="ckeditor"  rows="5"></textarea>
+            </td>
+        </tr>
+    </table>
+</div>

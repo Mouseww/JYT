@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "查看邮件";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<style>
+    body {
+        overflow:hidden;
+    }
+</style>
+<script>
+    var keyValue = '@ViewBag.keyValue';
+    var contentId = '@ViewBag.contentId';
+    $(function () {
+        $("#EmailContent").height($(window).height() - 195);
+        $("#FileList").height($(window).height() - 40);
+        
+        initControl();
+    })
+    //初始化控件
+    function initControl() {
+        if (keyValue) {
+            $.ajax({
+                url: "../../PublicInfoManage/Email/ReadEmail",
+                data: { keyValue: keyValue, IsRead: 1 },
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    $.currentIframe().InitialEmailNavCount();
+                    $.currentIframe().$("#gridTable").trigger("reloadGrid");
+                }
+            });
+        }
+        $.SetForm({
+            url: "../../PublicInfoManage/Email/GetEmailFormJson",
+            param: { keyValue: contentId },
+            success: function (data) {
+                $("#Theme").html(data.F_Theme).css("color", data.F_ThemeColor);
+                $("#SenderName").html(data.F_SenderName);
+                $("#SenderTime").html(data.F_SenderTimeName);
+                $("#AddresssHtml").html(data.F_AddresssHtml);
+                $("#EmailContent").html(data.F_EmailContent);
+                $(".mail-send-address-del").remove();
+                $('.mail-send-addresss').css("padding-top", "0");
+                if (data.F_Files != "" && data.F_Files !=null) {
+                    var num = data.F_Files.split(',').length;
+                    $('#F_FilesNum').text(num);
+                    $('#FileListContent').uploadifyExSet(data.F_Files, { isRemove: false, isDown: true });
+
+                    $('#lookFile').on('click', function () {
+                        var $this = $(this);
+                        var $fileList = $('#FileList');
+                        if ($this.hasClass('open')) {
+                            $fileList.animate({
+                                "right": '-370px'
+                            }, 500);
+                            $this.removeClass('open');
+                            $this.text('点击查看');
+                        }
+                        else {
+                            $fileList.animate({
+                                "right": '-0px'
+                            }, 500);
+                            $this.addClass('open');
+                            $this.text('关闭查看');
+                        }
+
+                    });
+                }
+                else {
+
+                }
+            }
+        });
+
+        
+    }
+</script>
+<div class="border-bottom" style="padding-top: 10px; background: #F5F5F5; padding-bottom: 8px; height: 130px;">
+    <div style="position: absolute; right: 38px; top: 38px;">
+        <img style="height: 50px; width: 50px;" src="~/Content/images/80_1.png" />
+    </div>
+    <div id="Theme" style="padding-bottom: 8px; padding-left: 18px; font-weight: bold; font-size: 16px;">关于2015.9.22服务故障的事故报告与赔偿声明</div>
+    <table class="form" style="color: #95A0AA;">
+        <tr>
+            <th class="formTitle" style="width: 75px; padding-bottom: 4px;">发件人：</th>
+            <td class="formValue" style="padding: 0px; padding-bottom: 4px;"><span id="SenderName" style="color: #5fa207;"></span>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="width: 75px; padding-bottom: 4px;">时　间：</th>
+            <td class="formValue" style="padding: 0px; padding-bottom: 4px;">
+                <div id="SenderTime">2015年9月22日(星期二) 晚上7:50</div>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="width: 75px; padding-bottom: 4px;">收件人：</th>
+            <td class="formValue" style="padding: 0px; padding-bottom: 4px;">
+                <div id="AddresssHtml"></div>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="width: 75px; padding-bottom: 4px;">附　件：</th>
+            <td class="formValue" style="padding: 0px; padding-bottom: 4px;"><span id="F_FilesNum">0</span> 个 <span id="lookFile" style="cursor:pointer;color:#337ab7">点击查看</span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="EmailContent" style="margin: 5px; overflow: auto; padding: 10px; padding-bottom: 0px;">
+</div>
+<div id="FileList" style="position:absolute;background:#fff;width:370px;right:-370px;top:0px;z-index:10;border-left:solid #ccc 1px;overflow-y:auto;">
+    <div style="border-bottom:solid #ccc 1px;height:30px;line-height:30px;padding-left:10px;color:#333;">附件列表</div>
+    <div id="FileListContent" style="padding:0px 10px;"></div>
+</div>
+<div class="form-button" id="wizard-actions">
+    <a class="btn btn-success" onclick="AcceptClick(1)">回复邮件</a>
+</div>

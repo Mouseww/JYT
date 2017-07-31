@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_MapForm.cshtml";
+}
+<div id="allmap"></div>
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+    map.centerAndZoom("上海", 12);
+    var menu = new BMap.ContextMenu();
+    var txtMenuItem = [
+		{
+		    text: '放大',
+		    callback: function () { map.zoomIn() }
+		},
+		{
+		    text: '缩小',
+		    callback: function () { map.zoomOut() }
+		}
+    ];
+    for (var i = 0; i < txtMenuItem.length; i++) {
+        menu.addItem(new BMap.MenuItem(txtMenuItem[i].text, txtMenuItem[i].callback, 100));
+    }
+    map.addContextMenu(menu);
+    //单击获取点击的经纬度
+    map.addEventListener("click", function (e) {
+        dialogContent({
+            id: 'Form',
+            title: '新增基站',
+            content: '<table class="form"><tr><td class="formTitle">基站名称</td><td class="formValue"><input id="conduct_money" type="text" class="form-control"/></td></tr><tr><td class="formTitle">基站坐标</td><td class="formValue"><input id="sitepoint" type="text" value=' + e.point.lng + "," + e.point.lat + ' class="form-control"/></td></tr></table>',
+            width: '300px',
+            height: '200px',
+            callBack: function (iframeId) {
+                var myIcon = new BMap.Icon("position.png", new BMap.Size(23, 50), { offset: new BMap.Size(10, 25) });
+                // 创建标注对象并添加到地图     
+                var marker = new BMap.Marker(e.point);
+                map.addOverlay(marker);
+                alert(top.$("#conduct_money").val());
+            }
+        });
+       // alert(e.point.lng + "," + e.point.lat);
+    });
+</script>

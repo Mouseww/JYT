@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "预览数据源";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<!--表格组件end-->
+<script>
+    var keyValue = request('keyValue');
+    var entity = null;
+    $(function () {
+        initControl();
+    });
+    //初始化控件
+    function initControl() {
+        //获取表单
+        if (!!keyValue) {
+            $.SetForm({
+                url: "../../SystemManage/DataSource/GetFormJson",
+                param: { keyValue: keyValue },
+                success: function (data) {
+                    entity = data;
+                    $('#F_Strsql').val(data.F_Strsql);//data.F_Strsql
+
+
+                    var _parametersHtml = "";
+                    var _parametersHasFlag = {};
+                    var _regParameters = new RegExp("&.*\\b", "g");
+                    var _regResult = null;
+                    do {
+                        _regResult = _regParameters.exec(data.F_Strsql);
+                        if (_regResult != null && _parametersHasFlag[_regResult[0]] == undefined) {
+                            _parametersHasFlag[_regResult[0]] = 1;
+                            _parametersHtml += '<tr><td class="formTitle">' + _regResult[0] + '</td></tr>';
+                            _parametersHtml += '<tr><td class="formValue"><input id="' + _regResult[0].replace('&', '') + '" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td></tr>';
+                        }
+                    }
+                    while (_regResult != null)
+                    if (_parametersHtml != "") {
+                        $('#parametersDiv').show();
+                        $('#parametersDiv').width(160);
+
+
+                        var _html = '<div style="color:#9f9f9f;padding-bottom:10px;"><i style="padding-right:5px;" class="fa fa-info-circle"></i><span>填写参数</span></div>';
+                        $('#parametersDiv').html(_html+'<table>' + _parametersHtml + "</table>");
+
+                        $('#sqlDataDiv').width(443);
+                    }
+                    else {
+                        $('#parametersDiv').hide();
+                        $('#sqlDataDiv').css("padding-left", "12px");
+                    }
+                }
+            });
+        }
+
+        $('#btn_search').on('click', function () {
+            if (!$('#parametersDiv').Validform()) {
+                return false;
+            }
+
+            var _queryJson = $('#parametersDiv').GetWebControls();
+            var postData = {
+                "strEntity": JSON.stringify(entity),
+                "queryJson": JSON.stringify(_queryJson)
+            };
+            $.getDataForm({
+                url: "../../SystemManage/DataSource/TestData",
+                param: postData,
+                success: function (data) {
+                    var strJson = JSON.stringify(data, null, "\t");
+                    $('#showData').val(strJson);
+                }
+            });
+        });
+    }
+</script>
+<div>
+    <div id="parametersDiv" style="float:left;border-right: #ccc 1px solid;height: 460px;overflow-y:auto;padding-top:10px;padding-left:15px;">
+
+    </div>
+    <div id="sqlDataDiv" style="float:right;margin-top:10px;padding-right:15px;">
+        <table class="form">
+            <tr>
+                <td class="formValue">
+                    <a id="btn_search" class="btn btn-danger">查询</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="formValue">
+                    <textarea id="F_Strsql" disabled class="form-control" style="height: 130px;" isvalid="yes" checkexpession="NotNull"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="formValue">
+                    <textarea id="showData" class="form-control" style="height: 250px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

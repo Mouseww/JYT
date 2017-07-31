@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "DemoJs插件演示";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+@System.Web.Optimization.Styles.Render("~/Content/scripts/plugins/uploadify/css")
+@System.Web.Optimization.Scripts.Render("~/Content/scripts/plugins/uploadify/js")
+@System.Web.Optimization.Scripts.Render("~/Content/scripts/utils/learun-demo/js")
+
+
+<div class="ui-layout" id="layout" style="height: 100%; width: 100%;">
+    <div class="ui-layout-west">
+        <div class="west-Panel">
+            <div class="panel-Title">插件目录</div>
+            <div id="itemTree"></div>
+        </div>
+    </div>
+    <div class="ui-layout-center">
+        <div class="center-Panel">
+            <div id="gridPanel" style="width:100%;padding:10px;">
+               <p>请点击左侧列表，查看JS插件的使用效果!</p>
+            </div>
+        </div>
+    </div>
+</div>

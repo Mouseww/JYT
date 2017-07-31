@@ -1,0 +1,153 @@
+﻿@{
+    ViewBag.Title = "角色成员";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script>
+    var userDatas = request('data');
+    $(function () {
+        InitialPage();
+        GetTree();
+        GetMember();
+      
+    });
+    //初始化页面
+    function InitialPage() {
+        //layout布局
+        $('#layout').layout({
+            applyDemoStyles: true,
+            west__size: 160,
+            spacing_open: 0,
+            onresize: function () {
+                $(window).resize()
+            }
+        });
+        $(".center-Panel").height($(window).height() - 40)
+    }
+    //加载树
+    var departmentid = "card-box";
+    function GetTree() {
+        var item = {
+            height: $(window).height() - 1,
+            url: "../../BaseManage/User/GetUserCheckTreeJson",
+            showcheck: true,
+            onnodeclick: function (item) {
+                if (item.parentnodes == "0") {
+                    $(".card-box").show();
+                    departmentid = "card-box";
+                } else {
+                    $(".card-box").hide();
+                    $('.' + item.id).show();
+                    departmentid = item.id;
+                }
+            },
+            oncheckboxclick: function (item, et) {
+                if (item.mytype == "User") {
+                    if (et == 1) {
+                        $('#' + item.id).parents('.card-box').addClass("active");
+                    }
+                    else {
+                        $('#' + item.id).parents('.card-box').removeClass("active");
+                    }
+                }
+                else {
+                    $(".card-box").hide();
+                    $('.' + item.id).show();
+                    departmentid = item.id;
+                    if (et == 1) {
+                        $('.' + item.id).addClass("active");
+                    }
+                    else {
+                        $('.' + item.id).removeClass("active");
+                    }
+                }
+            }
+        };
+        //初始化
+        $("#itemTree").treeview(item);
+    }
+    //加载成员
+    function GetMember() {
+        $.ajax({
+            url: "../../BaseManage/User/GetListJson",
+            type: "get",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                var _html = "";
+                $.each(data, function (i, row) {
+                    var imgName = "UserCard01.png";
+                    if (row.F_Gender == 1) {
+                        imgName = "UserCard02.png";
+                    }
+                    _html += '<div class="card-box ' + row.F_DepartmentId + '">';
+                    _html += '    <div class="card-box-img">';
+                    _html += '        <img src="' + top.contentPath + '/Content/images/' + imgName + '" />';
+                    _html += '    </div>';
+                    _html += '    <div id="' + row.F_UserId + '" data-name="'+row.F_RealName+'" class="card-box-content">';
+                    _html += '        <p>账户：' + row.F_Account + '</p>';
+                    _html += '        <p>姓名：' + row.F_RealName + '</p>';
+                    _html += '        <p>部门：' + top.learun.data.get(["department", row.F_DepartmentId, "FullName"]) + '</p>';
+                    _html += '    </div><i></i>';
+                    _html += '</div>';
+                });
+                $(".gridPanel").html(_html);
+                $(".card-box").click(function () {
+                    if (!$(this).hasClass("active")) {
+                        $(this).addClass("active");
+                    } else {
+                        $(this).removeClass("active");
+                    }
+                    $('#itemTree').setCheckedNodeOne($(this).find('.card-box-content').attr('id'));
+                });
+                var _data = userDatas.split(",");
+                $.each(_data, function (i, item) {
+                    $('#itemTree').setCheckedNodeOne(item);
+                });
+
+                learun.loading({ isShow: false });
+            }, beforeSend: function () {
+                learun.loading({ isShow: true });
+            }
+        });
+        //模糊查询用户（注：这个方法是理由jquery查询）
+        $("#txt_TreeKeyword").keyup(function () {
+            var value = $(this).val();
+            if (value != "") {
+                window.setTimeout(function () {
+                    $("." + departmentid)
+                     .hide()
+                     .filter(":contains('" + (value) + "')")
+                     .show();
+                }, 200);
+            } else {
+                $("." + departmentid).show();
+            }
+        }).keyup();
+    }
+    //保存表单
+    function AcceptClick(callBack) {
+        var userIds = [];
+        $('.gridPanel .active .card-box-content').each(function () {
+            userIds.push({ id: $(this).attr('id'), name: $(this).attr('data-name') });
+        });
+        callBack(userIds);
+        learun.dialogClose();
+    }
+</script>
+<div class="ui-layout" id="layout" style="height: 100%; width: 100%;">
+    <div class="ui-layout-west">
+        <div class="west-Panel" style="margin: 0px; border-top: none; border-left: none; border-bottom: none;">
+            <div id="itemTree"></div>
+        </div>
+    </div>
+    <div class="ui-layout-center">
+        <div class="treesearch">
+            <input id="txt_TreeKeyword" type="text" class="form-control" style="border-top: none;" placeholder="请输入要查询关键字" />
+            <span id="btn_TreeSearch" class="input-query" title="Search"><i class="fa fa-search"></i></span>
+        </div>
+        <div class="center-Panel" style="margin: 0px; border-right: none; border-left: none; border-bottom: none; background-color: #fff; overflow: auto; padding-bottom: 10px;">
+            <div class="gridPanel">
+            </div>
+        </div>
+    </div>
+</div>

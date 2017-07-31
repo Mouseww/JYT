@@ -1,0 +1,254 @@
+@{;
+    ViewBag.Title = "表单页面";
+    Layout = "~/Views/Shared/_OrderForm.cshtml";
+}
+<script>
+    var keyValue = request('keyValue');
+    $(function () {
+        InitialPage();
+        GetOrderEntryGrid();
+        initControl();
+    });
+    //初始化页面
+    function InitialPage() {;
+        //resize重设(表格、树形)宽高
+        $(window).resize(function (e) {
+            window.setTimeout(function () {
+                $('#gridTable').setGridWidth(($('.gridPanel').width()));
+                $('#gridTable').setGridHeight($(window).height() - 240.5);
+            }, 200);
+            e.stopPropagation();
+        });
+    }
+    //加载明细表
+    function GetOrderEntryGrid() {
+        var $grid = $('#gridTable');
+        $grid.jqGrid({
+            unwritten: false,
+            datatype: 'local',
+            height: $(window).height() - 240.5,
+            autowidth: true,
+            colModel: [
+{ label: '订单明细主键', name: 'F_OrderEntryId', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '订单主键', name: 'F_OrderId', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '商品Id', name: 'F_ProductId', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '商品编号', name: 'F_ProductCode', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '商品名称', name: 'F_ProductName', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '单位', name: 'F_UnitId', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '数量', name: 'F_Qty', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '单价', name: 'F_Price', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '金额', name: 'F_Amount', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '含税单价', name: 'F_Taxprice', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '税率', name: 'F_TaxRate', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '税额', name: 'F_Tax', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '含税金额', name: 'F_TaxAmount', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '排序码', name: 'F_SortCode', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '删除标记', name: 'F_DeleteMark', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '有效标志', name: 'F_EnabledMark', width: 80, align: '', sortable: false, resizable: false  },
+{ label: '备注', name: 'F_Description', width: 80, align: '', sortable: false, resizable: false  },
+            ],
+            pager: false,
+            rownumbers: true,
+            shrinkToFit: false,
+            gridview: true,
+            footerrow: false,
+            gridComplete: function () {
+            }
+        });
+        //默认添加13行 空行
+        for (var i = 1; i < 13; i++) {
+            var rowdata = {
+F_OrderEntryId: '<input name="F_OrderEntryId" type="text" class="editable center" />',
+F_OrderId: '<input name="F_OrderId" type="text" class="editable center" />',
+F_ProductId: '<input name="F_ProductId" type="text" class="editable center" />',
+F_ProductCode: '<input name="F_ProductCode" type="text" class="editable center" />',
+F_ProductName: '<input name="F_ProductName" type="text" class="editable center" />',
+F_UnitId: '<input name="F_UnitId" type="text" class="editable center" />',
+F_Qty: '<input name="F_Qty" type="text" class="editable center" />',
+F_Price: '<input name="F_Price" type="text" class="editable center" />',
+F_Amount: '<input name="F_Amount" type="text" class="editable center" />',
+F_Taxprice: '<input name="F_Taxprice" type="text" class="editable center" />',
+F_TaxRate: '<input name="F_TaxRate" type="text" class="editable center" />',
+F_Tax: '<input name="F_Tax" type="text" class="editable center" />',
+F_TaxAmount: '<input name="F_TaxAmount" type="text" class="editable center" />',
+F_SortCode: '<input name="F_SortCode" type="text" class="editable center" />',
+F_DeleteMark: '<input name="F_DeleteMark" type="text" class="editable center" />',
+F_EnabledMark: '<input name="F_EnabledMark" type="text" class="editable center" />',
+F_Description: '<input name="F_Description" type="text" class="editable center" />',
+            }
+            $grid.jqGrid('addRowData', i, rowdata);
+        };
+    }
+    //初始化控件
+    function initControl() {
+        //获取表单
+        if (!!keyValue) {
+            $.SetForm({
+                url: "../../BaseManage/Client_Order/GetFormJson",
+                param: { keyValue: keyValue },
+                success: function (data) {
+                    $("#form1").SetWebControls(data.entity);
+                    //明细
+                    var childEntity = data.childEntity;
+                    $('#gridTable').find('[role=row]').each(function (i) {
+                        var row = childEntity[i - 1];
+                        if (row != undefined) {
+$(this).find('input[name="F_OrderEntryId"]').val(row.F_OrderEntryId);
+$(this).find('input[name="F_OrderId"]').val(row.F_OrderId);
+$(this).find('input[name="F_ProductId"]').val(row.F_ProductId);
+$(this).find('input[name="F_ProductCode"]').val(row.F_ProductCode);
+$(this).find('input[name="F_ProductName"]').val(row.F_ProductName);
+$(this).find('input[name="F_UnitId"]').val(row.F_UnitId);
+$(this).find('input[name="F_Qty"]').val(row.F_Qty);
+$(this).find('input[name="F_Price"]').val(row.F_Price);
+$(this).find('input[name="F_Amount"]').val(row.F_Amount);
+$(this).find('input[name="F_Taxprice"]').val(row.F_Taxprice);
+$(this).find('input[name="F_TaxRate"]').val(row.F_TaxRate);
+$(this).find('input[name="F_Tax"]').val(row.F_Tax);
+$(this).find('input[name="F_TaxAmount"]').val(row.F_TaxAmount);
+$(this).find('input[name="F_SortCode"]').val(row.F_SortCode);
+$(this).find('input[name="F_DeleteMark"]').val(row.F_DeleteMark);
+$(this).find('input[name="F_EnabledMark"]').val(row.F_EnabledMark);
+$(this).find('input[name="F_Description"]').val(row.F_Description);
+                        }
+                    });
+                }
+            })
+        }
+    }
+    //保存表单;
+    function AcceptClick() {
+        if (!$('#form1').Validform()) {
+            return false;
+        }
+        var postData = $("#formTable").GetWebControls(keyValue);
+        var childEntryJson = [];
+        $('#gridTable').find('[role=row]').each(function (i) {
+        if (!!$(this).find('input[name="F_OrderEntryId"]').val()) {
+            childEntryJson.push({
+F_OrderEntryId: $(this).find('input[name="F_OrderEntryId"]').val(),
+F_OrderId: $(this).find('input[name="F_OrderId"]').val(),
+F_ProductId: $(this).find('input[name="F_ProductId"]').val(),
+F_ProductCode: $(this).find('input[name="F_ProductCode"]').val(),
+F_ProductName: $(this).find('input[name="F_ProductName"]').val(),
+F_UnitId: $(this).find('input[name="F_UnitId"]').val(),
+F_Qty: $(this).find('input[name="F_Qty"]').val(),
+F_Price: $(this).find('input[name="F_Price"]').val(),
+F_Amount: $(this).find('input[name="F_Amount"]').val(),
+F_Taxprice: $(this).find('input[name="F_Taxprice"]').val(),
+F_TaxRate: $(this).find('input[name="F_TaxRate"]').val(),
+F_Tax: $(this).find('input[name="F_Tax"]').val(),
+F_TaxAmount: $(this).find('input[name="F_TaxAmount"]').val(),
+F_SortCode: $(this).find('input[name="F_SortCode"]').val(),
+F_DeleteMark: $(this).find('input[name="F_DeleteMark"]').val(),
+F_EnabledMark: $(this).find('input[name="F_EnabledMark"]').val(),
+F_Description: $(this).find('input[name="F_Description"]').val(),
+                 });
+            }
+        });
+        $.SaveForm({
+            url: "../../BaseManage/Client_Order/SaveForm?keyValue=" + keyValue,
+            param: { "strEntity": JSON.stringify(postData), "strChildEntitys": JSON.stringify(childEntryJson) },
+            loading: "正在保存数据...",
+            success: function () {
+                $.currentIframe().$("#gridTable").trigger("reloadGrid");
+            }
+        })
+    }
+</script>
+<div class="bills" >
+ <div style="height:190px;overflow-y:auto;margin:10px 10px;">
+    <table id="formTable" class="form" style="width: 100%;">
+        <tr>
+<th class="formTitle" style="width: 60px;  ">订单主键<font face="宋体">*</font></th>
+<td class="formValue"><input id="F_OrderId" type="text" class="form-control"  /></td>
+<th class="formTitle" style="width: 60px;  ">客户主键</th>
+<td class="formValue"><input id="F_CustomerId" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">客户名称</th>
+<td class="formValue"><input id="F_CustomerName" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">销售人员Id</th>
+<td class="formValue"><input id="F_SellerId" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+</tr>
+<tr>
+<th class="formTitle" style="width: 60px;  ">销售人员</th>
+<td class="formValue"><input id="F_SellerName" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">单据日期</th>
+<td class="formValue"><input id="F_OrderDate" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">单据编号</th>
+<td class="formValue"><input id="F_OrderCode" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">优惠金额</th>
+<td class="formValue"><input id="F_DiscountSum" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+</tr>
+<tr>
+<th class="formTitle" style="width: 60px;  ">应收金额</th>
+<td class="formValue"><input id="F_Accounts" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">已收金额</th>
+<td class="formValue"><input id="F_ReceivedAmount" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">收款日期</th>
+<td class="formValue"><input id="F_PaymentDate" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">收款方式</th>
+<td class="formValue"><input id="F_PaymentMode" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+</tr>
+<tr>
+<th class="formTitle" style="width: 60px;  ">收款状态（1-未收款2-部分收款3-全部收款）</th>
+<td class="formValue"><input id="F_PaymentState" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">销售费用</th>
+<td class="formValue"><input id="F_SaleCost" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">摘要信息</th>
+<td class="formValue"><input id="F_AbstractInfo" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">合同编号</th>
+<td class="formValue"><input id="F_ContractCode" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+</tr>
+<tr>
+<th class="formTitle" style="width: 60px;  ">合同附件</th>
+<td class="formValue"><input id="F_ContractFile" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">排序码</th>
+<td class="formValue"><input id="F_SortCode" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">删除标记</th>
+<td class="formValue"><input id="F_DeleteMark" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">有效标志</th>
+<td class="formValue"><input id="F_EnabledMark" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+</tr>
+<tr>
+<th class="formTitle" style="width: 60px;  ">备注</th>
+<td class="formValue"><input id="F_Description" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">创建日期</th>
+<td class="formValue"><input id="F_CreateDate" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">创建用户主键</th>
+<td class="formValue"><input id="F_CreateUserId" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">创建用户</th>
+<td class="formValue"><input id="F_CreateUserName" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+</tr>
+<tr>
+<th class="formTitle" style="width: 60px;  ">修改日期</th>
+<td class="formValue"><input id="F_ModifyDate" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">修改用户主键</th>
+<td class="formValue"><input id="F_ModifyUserId" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+<th class="formTitle" style="width: 60px;  ">修改用户</th>
+<td class="formValue"><input id="F_ModifyUserName" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" /></td>
+     </tr>
+    </table>
+ </div>
+ <div class="gridPanel" >
+     <table id="gridTable" ></table>
+ </div>
+</div>
+<style>
+    body {
+        margin:0px;
+    }
+    .bills {
+        overflow: hidden;
+        border-radius: 0px;
+        position: relative;
+        background: #FFFFFF;
+        border: 0px solid rgb(204, 204, 204);
+        box-shadow:none;
+        padding: 0px;
+    }
+    .ui-widget-content {
+        border-left: 0px;
+        border-right: 0px;
+        border-bottom: 0px;
+    }
+</style>

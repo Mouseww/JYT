@@ -1,0 +1,255 @@
+﻿@{;
+  ViewBag.Title = "明细页面";
+  Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var keyValue = request('keyValue');
+    $(function () {
+        initControl();
+    });
+    //初始化控件
+    function initControl() {
+        //商机类别
+        $("#F_ChanceTypeId").ComboBox({
+            url: "../../SystemManage/DataItemDetail/GetDataItemListJson",
+            param: { EnCode: "Client_ChanceSort" },
+            id: "F_ItemValue",
+            text: "F_ItemName",
+            description: "==请选择==",
+            height: "200px"
+        });
+        //商机来源      
+        $("#F_SourceId").ComboBox({
+            url: "../../SystemManage/DataItemDetail/GetDataItemListJson",
+            param: { EnCode: "Client_ChanceSource" },
+            id: "F_ItemValue",
+            text: "F_ItemName",
+            description: "==请选择==",
+            height: "200px"
+        });
+        //商机阶段
+        $("#F_StageId").ComboBox({
+            url: "../../SystemManage/DataItemDetail/GetDataItemListJson",
+            param: { EnCode: "Client_ChancePhase" },
+            id: "F_ItemValue",
+            text: "F_ItemName",
+            description: "==请选择==",
+            height: "200px"
+        });
+        //跟进人员
+        $("#F_TraceUserId").ComboBoxTree({
+            url: "../../BaseManage/User/GetTreeJson",
+            description: "==请选择==",
+            height: "320px",
+            allowSearch: true
+        });
+        //公司行业
+        $("#F_CompanyNatureId").ComboBox({
+            url: "../../SystemManage/DataItemDetail/GetDataItemListJson",
+            param: { EnCode: "Client_Trade" },
+            id: "F_ItemValue",
+            text: "F_ItemName",
+            description: "==请选择==",
+            height: "200px"
+        });
+        //所在省份
+        $("#F_Province").ComboBox({
+            url: "../../SystemManage/Area/GetAreaListJson",
+            param: { parentId: "0" },
+            id: "F_AreaCode",
+            text: "F_AreaName",
+            description: "==选择省==",
+            height: "170px"
+        }).bind("change", function () {
+            var value = $(this).attr('data-value');
+            $("#F_City").ComboBox({
+                url: "../../SystemManage/Area/GetAreaListJson",
+                param: { parentId: value },
+                id: "F_AreaCode",
+                text: "F_AreaName",
+                description: "==选择市==",
+                height: "170px"
+            });
+        });
+        //所在城市
+        $("#F_City").ComboBox({
+            description: "==选择市==",
+            height: "170px"
+        });
+        //获取表单
+        if (!!keyValue) {
+            $.SetForm({
+                url: "../../CustomerManage/Chance/GetFormJson",
+                param: { keyValue: keyValue },
+                success: function (data) {
+                    $("#form1").SetWebControls(data);
+                    $("#F_Province").trigger("change"); $("#F_City").ComboBoxSetValue(data.City);
+                    $("#form1").find('.form-control,.ui-select,input').attr('readonly', 'readonly');
+                }
+            })
+        }
+    }
+</script>
+<div style="margin-top: 20px;margin-bottom: 20px; margin-right: 20px;">
+    <table class="form">
+        <tr>
+            <td class="formTitle">商机编号</td>
+            <td class="formValue">
+                <input id="F_EnCode" type="text" class="form-control" value="@ViewBag.EnCode" isvalid="yes" checkexpession="NotNull" />
+            </td>
+            <td class="formTitle">商机名称</td>
+            <td class="formValue">
+                <input id="F_FullName" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">预计金额</td>
+            <td class="formValue">
+                <input id="F_Amount" type="text" class="form-control" value="0.00" isvalid="yes" checkexpession="Double" />
+            </td>
+            <td class="formTitle">预计利润</td>
+            <td class="formValue">
+                <input id="F_Profit" type="text" class="form-control" value="0.00" isvalid="yes" checkexpession="Double" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">预计成交</td>
+            <td class="formValue">
+                <input id="F_DealDate" type="text" class="form-control input-wdatepicker" onfocus="WdatePicker()" />
+            </td>
+            <td class="formTitle">销售费用</td>
+            <td class="formValue">
+                <input id="F_SaleCost" type="text" class="form-control" isvalid="yes" checkexpession="DoubleOrNull" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">商机类别</td>
+            <td class="formValue">
+                <div id="F_ChanceTypeId" type="select" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+            <td class="formTitle">商机来源</td>
+            <td class="formValue">
+                <div id="F_SourceId" type="select" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">商机阶段</td>
+            <td class="formValue">
+                <div id="F_StageId" type="select" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+            <td class="formTitle">成功率%</td>
+            <td class="formValue">
+                <input id="F_SuccessRate" type="text" class="form-control" isvalid="yes" checkexpession="Double" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">公司名称</td>
+            <td class="formValue">
+                <input id="F_CompanyName" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" />
+            </td>
+            <td class="formTitle">跟进人员</td>
+            <td class="formValue">
+                <div id="F_TraceUserId" type="selectTree" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">公司行业</td>
+            <td class="formValue">
+                <div id="F_CompanyNatureId" type="select" class="ui-select"></div>
+            </td>
+
+            <td class="formTitle">公司网站</td>
+            <td class="formValue">
+                <input id="F_CompanySite" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">公司情况</td>
+            <td class="formValue" colspan="3">
+                <input id="F_CompanyDesc" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">公司地址</td>
+            <td class="formValue" colspan="3">
+                <input id="F_CompanyAddress" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">所在省份</td>
+            <td class="formValue">
+                <div id="F_Province" type="select" class="ui-select"></div>
+            </td>
+            <td class="formTitle">所在城市</td>
+            <td class="formValue">
+                <div id="F_City" type="select" class="ui-select"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">联系人</td>
+            <td class="formValue">
+                <input id="F_Contacts" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" />
+            </td>
+            <td class="formTitle">手机</td>
+            <td class="formValue">
+                <input id="F_Mobile" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">电话</td>
+            <td class="formValue">
+                <input id="F_Tel" type="text" class="form-control" />
+            </td>
+            <td class="formTitle">传真</td>
+            <td class="formValue">
+                <input id="F_Fax" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">QQ</td>
+            <td class="formValue">
+                <input id="F_QQ" type="text" class="form-control" />
+            </td>
+            <td class="formTitle">Email</td>
+            <td class="formValue">
+                <input id="F_Email" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">微信</td>
+            <td class="formValue">
+                <input id="F_Wechat" type="text" class="form-control" />
+            </td>
+            <td class="formTitle">爱好</td>
+            <td class="formValue">
+                <input id="F_Hobby" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">备注</td>
+            <td class="formValue" colspan="3">
+                <input id="F_Description" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">创建用户</td>
+            <td class="formValue">
+                <input id="F_CreateUserName" type="text" class="form-control" />
+            </td>
+            <td class="formTitle">创建时间</td>
+            <td class="formValue">
+                <input id="F_CreateDate" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formTitle">修改用户</td>
+            <td class="formValue">
+                <input id="F_ModifyUserName" type="text" class="form-control" />
+            </td>
+            <td class="formTitle">修改时间</td>
+            <td class="formValue">
+                <input id="F_ModifyDate" type="text" class="form-control" />
+            </td>
+        </tr>
+    </table>
+</div>

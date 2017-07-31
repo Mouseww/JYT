@@ -1,0 +1,460 @@
+﻿@{
+    ViewBag.Title = "订单表单";
+    Layout = "~/Views/Shared/_OrderForm.cshtml";
+}
+<link href="~/Content/scripts/plugins/uploadify/uploadify.css" rel="stylesheet" />
+<link href="~/Content/scripts/plugins/uploadify/uploadify.extension.css" rel="stylesheet" />
+<script src="~/Content/scripts/plugins/uploadify/jquery.uploadify.min.js"></script>
+
+<link href="~/Content/scripts/plugins/webuploader/webuploader.css" rel="stylesheet" />
+<script src="~/Content/scripts/plugins/webuploader/webuploader.nolog.js"></script>
+<style>
+    .uploadify-queue {height: auto;max-height: 295px;}
+    .uploadify-queue-item:last-child {border-bottom: solid 0px;}
+    .uploadify-queue-item .cancel a {margin-top: 4px;margin-right: 5px;background: none;text-indent: initial;}
+    .uploadify-queue-item .cancel a > i {color: #808080; font-size: 21px;}
+</style>
+<script>
+    var keyValue = request('keyValue');
+    var folderId = "";
+    $(function () {
+        InitialPage();
+        GetOrderEntryGrid();
+        InitControl();
+    });
+    //初始化页面
+    function InitialPage() {
+        $(".bills").height($(window).height() - 88);
+        //resize重设(表格、树形)宽高
+        $(window).resize(function (e) {
+            window.setTimeout(function () {
+                $('#gridTable').setGridWidth(($('.gridPanel').width()));
+                $(".bills").height($(window).height() - 88);
+            }, 200);
+            e.stopPropagation();
+        });
+    }
+    //初始化控件
+    function InitControl() {
+        //客户名称
+        $("#F_CustomerId").ComboBox({
+            url: "../../CustomerManage/Customer/GetListJson",
+            id: "F_CustomerId",
+            text: "F_FullName",
+            description: "==请选择==",
+            height: "360px",
+            width: "280px",
+            allowSearch: true
+        });
+        //销售人员
+        $("#F_SellerId").ComboBoxTree({
+            url: "../../BaseManage/User/GetTreeJson",
+            description: "==请选择==",
+            height: "360px",
+            width: "280px",
+            allowSearch: true
+        });
+        //收款方式
+        $("#F_PaymentMode").ComboBox({
+            url: "../../SystemManage/DataItemDetail/GetDataItemListJson",
+            param: { EnCode: "Client_PaymentMode" },
+            id: "F_ItemValue",
+            text: "F_ItemName",
+            description: "==请选择==",
+            height: "200px"
+        });
+
+        //初始化文件上传按钮
+        $('#btnUpFile').uploadifyEx({
+            url: "/Utility/UploadifyFile?folderId=" + keyValue + "&DataItemEncode=SaveFilePath&DataItemName=DemoFilePath",
+            onUploadSuccess: function (data) {
+                folderId = data.folderId;
+            }
+        });
+
+        //获取表单
+        if (!!keyValue) {
+            $("#savaAndAdd").remove();
+            $.SetForm({
+                url: "../../CustomerManage/Order/GetFormJson",
+                param: { keyValue: keyValue },
+                success: function (data) {
+                    //主表
+                    var order = data.order;
+                    $("#form1").SetWebControls(order);
+                    $("#F_DiscountSum").val(toDecimal(order.F_DiscountSum));
+                    $("#F_Accounts").val(toDecimal(order.F_Accounts));
+                    $("#F_SaleCost").val(toDecimal(order.F_SaleCost));
+                    //明细
+                    var orderEntry = data.orderEntry;
+                    $("#gridTable").find('[role=row]').each(function (i) {
+                        var row = orderEntry[i - 1];
+                        if (row != undefined) {
+                            $(this).find('input[name="F_OrderEntryId"]').val(row.F_OrderEntryId);
+                            $(this).find('input[name="F_ProductName"]').val(row.F_ProductName);
+                            $(this).find('input[name="F_ProductCode"]').val(row.F_ProductCode);
+                            $(this).find('input[name="F_ProductId"]').val(row.F_ProductId);
+                            $(this).find('input[name="F_UnitId"]').val(row.F_UnitId);
+                            $(this).find('input[name="F_Qty"]').val(toDecimal(row.F_Qty));
+                            $(this).find('input[name="F_Price"]').val(toDecimal(row.F_Price));
+                            $(this).find('input[name="F_Amount"]').val(toDecimal(row.F_Amount));
+                            $(this).find('input[name="F_TaxRate"]').val(row.F_TaxRate);
+                            $(this).find('input[name="F_Taxprice"]').val(toDecimal(row.F_Taxprice));
+                            $(this).find('input[name="F_Tax"]').val(toDecimal(row.F_Tax));
+                            $(this).find('input[name="F_TaxAmount"]').val(toDecimal(row.F_TaxAmount));
+                            $(this).find('input[name="F_Description"]').val(row.F_Description);
+                            $(this).find('input').removeAttr('disabled').attr("isvalid", "yes");
+                            $(this).next().find('input').removeAttr('disabled');
+                        }
+                    });
+                    //合计
+                    var TotalQty = 0.00, TotalPrice = 0.00, TotalAmount = 0.00, TotalTaxprice = 0.00, TotalTax = 0.00, TotalTaxAmount = 0.00;
+                    $("#gridTable").find("tbody tr").each(function (i) {
+                        var Qty = $(this).find('td:eq(5)').find('input').val();
+                        if (Qty != "" && Qty != undefined) {
+                            TotalQty += Number(Qty);
+                        }
+                        var Price = $(this).find('td:eq(6)').find('input').val();
+                        if (Price != "" && Price != undefined) {
+                            TotalPrice += Number(Price);
+                        }
+                        var Amount = $(this).find('td:eq(7)').find('input').val();
+                        if (Amount != "" && Amount != undefined) {
+                            TotalAmount += Number(Amount);
+                        }
+                        var Taxprice = $(this).find('td:eq(9)').find('input').val();
+                        if (Taxprice != "" && Taxprice != undefined) {
+                            TotalTaxprice += Number(Taxprice);
+                        }
+                        var Tax = $(this).find('td:eq(10)').find('input').val();
+                        if (Tax != "" && Tax != undefined) {
+                            TotalTax += Number(Tax);
+                        }
+                        var TaxAmount = $(this).find('td:eq(11)').find('input').val();
+                        if (TaxAmount != "" && TaxAmount != undefined) {
+                            TotalTaxAmount += Number(TaxAmount);
+                        }
+                    });
+                    $("#F_TotalQty").text(toDecimal(TotalQty));
+                    $("#F_TotalPrice").text(toDecimal(TotalPrice));
+                    $("#F_TotalAmount").text(toDecimal(TotalAmount));
+                    $("#F_TotalTaxprice").text(toDecimal(TotalTaxprice));
+                    $("#F_TotalTax").text(toDecimal(TotalTax));
+                    $("#F_TotalTaxAmount").text(toDecimal(TotalTaxAmount));
+                }
+            });
+        }
+    }
+    //加载明细
+    function GetOrderEntryGrid() {
+        var $grid = $("#gridTable");
+        $grid.jqGrid({
+            unwritten: false,
+            datatype: "local",
+            height: '100%',
+            autowidth: true,
+            colModel: [
+                { label: '主键', name: 'F_OrderEntryId', hidden: true },
+                { label: '商品名称<span class="label label label-default" style="margin-left:5px;">扫描枪录入</span><span  data-wfname="商品名称" data-id="F_ProductName" data-girdid="gridTable" type="gridcol"></span>', name: "F_ProductName", width: 260, align: 'left', sortable: false, resizable: false },
+                { label: '商品编号<span  data-wfname="商品编号" data-girdid="gridTable" data-id="F_ProductCode" type="gridcol"></span>', name: "F_ProductCode", width: 100, align: 'center', sortable: false, resizable: false },
+                { label: '单位<span  data-wfname="单位" data-girdid="gridTable" data-id="F_UnitId" type="gridcol"></span>', name: "F_UnitId", width: 100, align: 'center', sortable: false, resizable: false },
+                { label: '数量<span  data-wfname="数量" data-girdid="gridTable" data-id="F_Qty" type="gridcol"></span>', name: 'F_Qty', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '单价<span  data-wfname="单价" data-girdid="gridTable" data-id="F_Price" type="gridcol"></span>', name: 'F_Price', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '金额<span  data-wfname="金额" data-girdid="gridTable" data-id="F_Amount" type="gridcol"></span>', name: 'F_Amount', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '税率(%)<span  data-wfname="税率" data-girdid="gridTable" data-id="F_TaxRate" type="gridcol"></span>', name: 'F_TaxRate', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '含税单价<span  data-wfname="含税单价" data-girdid="gridTable" data-id="F_Taxprice" type="gridcol"></span>', name: 'F_Taxprice', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '税额<span  data-wfname="税额" data-girdid="gridTable" data-id="F_Tax" type="gridcol"></span>', name: 'F_Tax', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '含税金额<span  data-wfname="含税金额" data-girdid="gridTable" data-id="F_TaxAmount" type="gridcol"></span>', name: 'F_TaxAmount', width: 80, align: 'center', sortable: false, resizable: false },
+                { label: '说明信息<span  data-wfname="说明信息" data-girdid="gridTable" data-id="F_Description" type="gridcol"></span>', name: 'F_Description', width: 200, align: 'left', sortable: false, resizable: false }
+            ],
+            pager: false,
+            rownumbers: true,
+            shrinkToFit: false,
+            gridview: true,
+            footerrow: true,
+            gridComplete: function () {
+                //合计
+                $(this).footerData("set", {
+                    "F_UnitId": "合计：",
+                    "F_Qty": "<span id='F_TotalQty' data-wfname='数量合计' type='label' >0.00</span>",
+                    "F_Price": "<span id='F_TotalPrice' data-wfname='单价合计' type='label' >0.00</span>",
+                    "F_Amount": "<span id='F_TotalAmount' data-wfname='金额合计' type='label'>0.00</span>",
+                    "F_Taxprice": "<span id='F_TotalTaxprice' data-wfname='含税单价合计' type='label'>0.00</span>",
+                    "F_Tax": "<span id='F_TotalTax'data-wfname='税额合计' type='label'>0.00</span >",
+                    "F_TaxAmount": "<span id='F_TotalTaxAmount' data-wfname='含税金额合计' type='label'>0.00</span>"
+                });
+                $('table.ui-jqgrid-ftable td[aria-describedby="gridTable_F_UnitId"]').prevUntil().css("border-right-color", "#fff");
+            }
+        });
+        //表头合并
+        $grid.jqGrid('setGroupHeaders', {
+            useColSpanStyle: true,
+            groupHeaders: [
+              { startColumnName: 'F_ProductName', numberOfColumns: 3, titleText: '商品信息' },
+              { startColumnName: 'F_Qty', numberOfColumns: 7, titleText: '价格信息' }
+            ]
+        });
+        //默认添加13行 空行
+        for (var i = 1; i < 13; i++) {
+            var rowdata = {
+                F_OrderEntryId: '<input name="F_OrderEntryId" type="text" />',
+                F_ProductName: '<div class="product"><input name="F_ProductName" readonly type="text" class="editable" isvalid="no" checkexpession="NotNull"/><span class="ui-icon-ellipsis"></span></div>',
+                F_ProductCode: '<input name="F_ProductCode" type="text" class="editable center disabled" /><input name="F_ProductId" type="hidden" />',
+                F_UnitId: '<input name="F_UnitId" type="text" class="editable center" />',
+                F_Qty: '<input name="F_Qty" type="text" class="editable center decimal" isvalid="no" checkexpession="Double" />',
+                F_Price: '<input name="F_Price" type="text" class="editable center decimal" isvalid="no" checkexpession="Double" />',
+                F_Amount: '<input name="F_Amount" type="text" class="editable center decimal disabled" isvalid="no" checkexpession="Double" />',
+                F_TaxRate: '<input name="F_TaxRate" type="text" class="editable center decimal" isvalid="no" checkexpession="Double" />',
+                F_Taxprice: '<input name="F_Taxprice" type="text" class="editable center decimal" isvalid="no" checkexpession="Double" />',
+                F_Tax: '<input name="F_Tax" type="text" class="editable center decimal disabled" isvalid="no" checkexpession="Double" />',
+                F_TaxAmount: '<input name="F_TaxAmount" type="text" class="editable center decimal disabled" isvalid="no" checkexpession="Double" />',
+                F_Description: '<input name="F_Description" type="text" class="editable" />',
+            }
+            $grid.jqGrid('addRowData', i, rowdata);
+        };
+        $grid.find('.decimal').attr('onfocus', 'IsMoney(this.id)');
+        $grid.find('input').attr("disabled", "disabled");
+        $grid.find("tbody tr:eq(1)").find('input').removeAttr('disabled').attr("isvalid", "yes");
+        $grid.find('.disabled').attr("disabled", "disabled");
+        //商品名称事件
+        $('input[name="F_ProductName"]').focus(function () {
+            $('.ui-icon-ellipsis').hide();
+            $(this).next('.ui-icon-ellipsis').show();
+            $(this).Contextmenu();
+        });
+        //选择商品事件
+        $('.ui-icon-ellipsis').click(function () {
+            var $ellipsis = $(this);
+            dialogOpen({
+                id: "OptionProduct",
+                title: '选择商品',
+                url: '/CustomerManage/Order/OptionProduct',
+                width: "600px",
+                height: "400px",
+                callBack: function (iframeId) {
+                    top.frames[iframeId].AcceptClick(function (data) {
+                        if ($grid.find('[role=row]').find('[data-value=' + data.ProductId + ']').length == 0) {
+                            $ellipsis.parents('[role=row]').find('input[name="F_ProductName"]').val(data.F_ProductName);
+                            $ellipsis.parents('[role=row]').find('input[name="F_ProductCode"]').val(data.F_ProductCode).attr('data-value', data.F_ProductId);
+                            $ellipsis.parents('[role=row]').find('input[name="F_ProductId"]').val(data.F_ProductId);
+                            $ellipsis.parents('[role=row]').find('input[name="F_Qty"]').val('1.00');
+                            $ellipsis.parents('[role=row]').find('input[name="F_Price"]').val('0.00');
+                            $ellipsis.parents('[role=row]').find('input[name="F_Amount"]').val('0.00');
+                            $ellipsis.parents('[role=row]').find('input[name="F_TaxRate"]').val('0.00');
+                            $ellipsis.parents('[role=row]').find('input[name="F_Taxprice"]').val('0.00');
+                            $ellipsis.parents('[role=row]').find('input[name="F_Tax"]').val('0.00');
+                            $ellipsis.parents('[role=row]').find('input[name="F_TaxAmount"]').val('0.00');
+                            $ellipsis.parents('[role=row]').find('input').removeAttr('disabled').attr("isvalid", "yes");
+                            $ellipsis.parents('[role=row]').next().find('input').removeAttr('disabled');
+                        } else {
+                            top.dialogTop('商品信息已存在,不能重复添加', 'error');
+                        }
+                    });
+                },
+                btn: ['确认选中', '关闭']
+            });
+        });
+        //价格文本框事件
+        $grid.find('.decimal').click(function () {
+            $(this).select();
+        });
+        //价格文本框换算
+        $grid.find('.decimal').keyup(function () {
+            var _inputName = $(this).attr('name');
+            var $Qty = $(this).parents('[role=row]').find('input[name="F_Qty"]');                    //数量
+            var $Price = $(this).parents('[role=row]').find('input[name="F_Price"]');                //单价
+            var $Amount = $(this).parents('[role=row]').find('input[name="F_Amount"]');              //金额
+            var $TaxRate = $(this).parents('[role=row]').find('input[name="F_TaxRate"]');            //税率(%)
+            var $Taxprice = $(this).parents('[role=row]').find('input[name="F_Taxprice"]');          //含税单价
+            var $Tax = $(this).parents('[role=row]').find('input[name="F_Tax"]');                    //税额
+            var $TaxAmount = $(this).parents('[role=row]').find('input[name="F_TaxAmount"]');        //含税金额
+            if (_inputName == "Taxprice") {
+                //单价 * (1 + (税率 / 100))=含税单价
+                $Price.val(toDecimal($Taxprice.val() / (1 + ($TaxRate.val() / 100))));
+            } else {
+                //单价 * (1 + (税率 / 100))=含税单价
+                $Taxprice.val(toDecimal($Price.val() * (1 + ($TaxRate.val() / 100))));
+            }
+            //数量*单价=金额
+            $Amount.val(toDecimal($Qty.val() * $Price.val()));
+            //(含税单价-单价)*数量=税额
+            $Tax.val(toDecimal(($Taxprice.val() - $Price.val()) * $Qty.val()));
+            //数量*含税单价=含税金额
+            $TaxAmount.val(toDecimal($Qty.val() * $Taxprice.val()));
+            //合计
+            var TotalQty = 0.00, TotalPrice = 0.00, TotalAmount = 0.00, TotalTaxprice = 0.00, TotalTax = 0.00, TotalTaxAmount = 0.00;
+            $grid.find("tbody tr").each(function (i) {
+                var Qty = $(this).find('td:eq(5)').find('input').val();
+                if (Qty != "" && Qty != undefined) {
+                    TotalQty += Number(Qty);
+                }
+                var Price = $(this).find('td:eq(6)').find('input').val();
+                if (Price != "" && Price != undefined) {
+                    TotalPrice += Number(Price);
+                }
+                var Amount = $(this).find('td:eq(7)').find('input').val();
+                if (Amount != "" && Amount != undefined) {
+                    TotalAmount += Number(Amount);
+                }
+                var Taxprice = $(this).find('td:eq(9)').find('input').val();
+                if (Taxprice != "" && Taxprice != undefined) {
+                    TotalTaxprice += Number(Taxprice);
+                }
+                var Tax = $(this).find('td:eq(10)').find('input').val();
+                if (Tax != "" && Tax != undefined) {
+                    TotalTax += Number(Tax);
+                }
+                var TaxAmount = $(this).find('td:eq(11)').find('input').val();
+                if (TaxAmount != "" && TaxAmount != undefined) {
+                    TotalTaxAmount += Number(TaxAmount);
+                }
+            });
+            $("#F_TotalQty").text(toDecimal(TotalQty));
+            $("#F_TotalPrice").text(toDecimal(TotalPrice));
+            $("#F_TotalAmount").text(toDecimal(TotalAmount));
+            $("#F_TotalTaxprice").text(toDecimal(TotalTaxprice));
+            $("#F_TotalTax").text(toDecimal(TotalTax));
+            $("#F_TotalTaxAmount").text(toDecimal(TotalTaxAmount));
+        });
+    }
+    //保存表单
+    function AcceptClick(save_Mode) {
+        if (!$('#form1').Validform()) {
+            return false;
+        }
+        var OrderEntryJson = [];
+        $("#gridTable").find('[role=row]').each(function (i) {
+            if (!!$(this).find('input[name="F_ProductId"]').val()) {
+                OrderEntryJson.push({
+                    F_OrderEntryId: $(this).find('input[name="F_OrderEntryId"]').val(),
+                    F_ProductName: $(this).find('input[name="F_ProductName"]').val(),
+                    F_ProductCode: $(this).find('input[name="F_ProductCode"]').val(),
+                    F_ProductId: $(this).find('input[name="F_ProductId"]').val(),
+                    F_UnitId: $(this).find('input[name="F_UnitId"]').val(),
+                    F_Qty: $(this).find('input[name="F_Qty"]').val(),
+                    F_Price: $(this).find('input[name="F_Price"]').val(),
+                    F_Amount: $(this).find('input[name="F_Amount"]').val(),
+                    F_TaxRate: $(this).find('input[name="F_TaxRate"]').val(),
+                    F_Taxprice: $(this).find('input[name="F_Taxprice"]').val(),
+                    F_Tax: $(this).find('input[name="F_Tax"]').val(),
+                    F_TaxAmount: $(this).find('input[name="F_TaxAmount"]').val(),
+                    F_Description: $(this).find('input[name="F_Description"]').val(),
+                    SortCode: i
+                });
+            }
+        });
+        var postData = $("#form1").GetWebControls(keyValue);
+        postData["F_CustomerName"] = $("#F_CustomerId").attr('data-text');
+        postData["F_SellerName"] = $("#F_SellerId").attr('data-text');
+        postData["orderEntryJson"] = JSON.stringify(OrderEntryJson);
+        $.ConfirmAjax({
+            msg: "注：您确认要保存此操作吗？",
+            url: "../../CustomerManage/Order/SaveForm?keyValue=" + keyValue,
+            param: postData,
+            success: function (data) {
+                var fId = request('fId');
+                top.learun.getIframe(fId).$("#gridTable").trigger("reloadGrid");
+                if (save_Mode == 1) {
+                    //top.$.removeTab('closeCurrent');
+                    //top.tablist.newTab({
+                    //    id: "OrderForm",
+                    //    title: "新增订单",
+                    //    closed: true,
+                    //    replace: true,
+                    //    icon: "fa fa-file-text-o",
+                    //    url: top.contentPath + "/CustomerManage/Order/Form"
+                    //});
+                    //$.currentIframe().$("#gridTable").trigger("reloadGrid");
+                    top.$.removeTab('closeCurrent');
+                } else {
+                    top.$.removeTab('closeCurrent');
+                }
+            }
+        });
+    }
+</script>
+<div class="bills">
+    <table class="form" style="width: 100%; margin-bottom: 10px;">
+        <tr>
+            <th class="formTitle" style="width: 60px;">客户名称<font face="宋体">*</font></th>
+            <td class="formValue">
+                <div id="F_CustomerId" data-wfname="客户名称" type="select" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+            <th class="formTitle">销售人员<font face="宋体">*</font></th>
+            <td class="formValue">
+                <div id="F_SellerId" data-wfname="销售人员" type="selectTree" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+            <th class="formTitle">单据日期<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_OrderDate" data-wfname="单据日期" type="text" value="@LeaRun.Util.Time.GetToday()" class="form-control input-wdatepicker" onfocus="WdatePicker({maxDate:'%y-%M-%d'})" isvalid="yes" checkexpession="NotNull" />
+            </td>
+            <th class="formTitle">单据编号<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_OrderCode" data-wfname="单据编号" type="text" readonly value="@ViewBag.OrderCode" class="form-control" isvalid="yes" checkexpession="NotNull" />
+            </td>
+        </tr>
+    </table>
+    <div class="gridPanel">
+        <table id="gridTable"></table>
+    </div>
+    <textarea id="Description" data-wfname="备注信息" placeholder="暂无备注信息" class="form-control" style="width: 100%; height: 50px; margin-top: 10px;"></textarea>
+    <table class="form" style="width: 100%; margin-top: 5px;">
+        <tr>
+            <th class="formTitle" style="width: 60px;">优惠金额<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_DiscountSum" data-wfname="优惠金额" type="text" class="form-control" value="0.00" isvalid="yes" checkexpession="Double" />
+            </td>
+            <th class="formTitle">收款金额<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_Accounts" data-wfname="收款金额" type="text" class="form-control" value="0.00" isvalid="yes" checkexpession="Double" />
+            </td>
+            <th class="formTitle">收款日期<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_PaymentDate" data-wfname="收款日期" type="text" class="form-control input-wdatepicker" onfocus="WdatePicker()" isvalid="yes" checkexpession="NotNull" />
+            </td>
+            <th class="formTitle">收款方式<font face="宋体">*</font></th>
+            <td class="formValue">
+                <div id="F_PaymentMode" data-wfname="收款方式" type="select" multiples="true" class="ui-select" isvalid="yes" checkexpession="NotNull"></div>
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle" style="width: 60px;">销售费用<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_SaleCost" data-wfname="销售费用" type="text" class="form-control" value="0.00" isvalid="yes" checkexpession="Double" />
+            </td>
+            <th class="formTitle">制单人员<font face="宋体">*</font></th>
+            <td class="formValue">
+                <input id="F_CreateUserName" data-wfname="制单人员" type="text" class="form-control" readonly value="@LeaRun.Application.Code.OperatorProvider.Provider.Current().UserName" /></td>
+            <th class="formTitle">合同编号</th>
+            <td class="formValue">
+                <input id="F_ContractCode" data-wfname="合同编号" type="text" class="form-control" />
+            </td>
+            <th class="formTitle">合同附件</th>
+            <td class="formValue">
+                <input id="F_ContractFile" data-wfname="合同附件" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">摘要信息</th>
+            <td class="formValue" colspan="7">
+                <input id="F_AbstractInfo" data-wfname="摘要信息" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <th class="formTitle">添加附件</th>
+            <td class="formValue" colspan="7">
+                <div id="btnUpFile"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="bottomField" data-wfhide >
+    <a id="savaAndAdd" class="btn btn-success" onclick="AcceptClick(1)">保存并新增</a>
+    <a id="save" class="btn btn-default" onclick="AcceptClick(2)">保存单据</a>
+</div>
+<div class="contextmenu">
+    <ul>
+        <li>添加一行</li>
+        <li>删除一行</li>
+    </ul>
+</div>

@@ -1,0 +1,64 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-stable nav-bar-block nav-title-slide-ios7">
+    <button class="button button-clear " ng-click="closeDetailsModal()"><i class="icon ion-ios-arrow-left"></i></button>
+    <h1 class="title">{{detailsData.fullName}}</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="openEditModal(detailsData)"><i class="icon ion-ios-compose-outline"></i></button>
+    </div>
+  </ion-header-bar>
+  <ion-content delegate-handle="businessDetailHandle">
+    <ion-list>
+      <ion-item style="color: rgba(0, 0, 0, 0.5);font-size: 12px;padding: 2px 10px;">
+        <div><span class="balanced">{{detailsData.f_createusername}}</span> 创建于 {{detailsData.f_createdate}}</div>
+      </ion-item>
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>流程编号</span>
+        </div>
+        <span>{{detailsData.f_code}}</span>
+      </ion-item>
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>流程名称</span>
+        </div>
+        <span>{{detailsData.f_customname}}</span>
+      </ion-item>
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>等级</span>
+        </div>
+        <span class="positive">{{detailsData.f_wflevel}}</span>
+      </ion-item>
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>状态</span>
+        </div>
+        <span class="positive">{{detailsData.f_isfinish}}</span>
+      </ion-item>
+      <!--<ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>标志</span>
+        </div>
+        <span class="positive">{{detailsData.f_enabledmark}}</span>
+      </ion-item>-->
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>创建人</span>
+        </div>
+        <span class="positive">{{detailsData.f_createusername}}</span>
+      </ion-item>
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>创建日期</span>
+        </div>
+        <span class="positive">{{detailsData.f_createdate}}</span>
+      </ion-item>
+      <ion-item class="lr-details-item">
+        <div class="lr-item-htitle">
+          <span>请假天数</span>
+        </div>
+        <span class="positive">{{detailsData.f_enabledmark}}</span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-modal-view>
