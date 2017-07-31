@@ -27,7 +27,7 @@ namespace LeaRun.Util.WebControl
            
             foreach (var item in parents) { 
              ChildNodeList = ListData.FindAll(t => t.parentId == item);
-                if (ChildNodeList.Count > 0) { break; }
+                if (ChildNodeList.Count > 0) { break; } 
             }
             }
             catch
