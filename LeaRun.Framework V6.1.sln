@@ -92,7 +92,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaRun.WorkFlow", "LeaRun.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaRun.Util.SignalR", "LeaRun.Util\LeaRun.Util.SignalR\LeaRun.Util.SignalR.csproj", "{6BC8C632-4985-4E7E-B5CA-375D400EA8A5}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "LeaRun.Application.App(1)", "LeaRun.Application.App\", "{588E5D33-B45C-4B43-BEE4-182DC18F6A57}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "LeaRun.Application.App", "LeaRun.Application.App\", "{588E5D33-B45C-4B43-BEE4-182DC18F6A57}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_1850"
