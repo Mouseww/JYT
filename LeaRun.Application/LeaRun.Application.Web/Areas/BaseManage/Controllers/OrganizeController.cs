@@ -55,6 +55,12 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult GetTreeJson(string keyword)
         {
             var data = organizeCache.GetList().ToList();
+            if (Session["organize"] != null)
+            {
+                var organize = (OrganizeEntity)Session["organize"];
+                data=data.FindAll(a => a.F_OrganizeId == organize.F_OrganizeId);
+            }
+           
             if (!string.IsNullOrEmpty(keyword))
             {
                 data = data.TreeWhere(t => t.F_FullName.Contains(keyword), "F_OrganizeId", "F_ParentId");
@@ -85,6 +91,12 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult GetTreeListJson(string condition, string keyword)
         {
             var data = organizeBLL.GetList().ToList();
+            if (Session["organize"] != null)
+            {
+                var organize = (OrganizeEntity)Session["organize"];
+                data = data.FindAll(a => a.F_OrganizeId == organize.F_OrganizeId||a.F_ParentId== organize.F_OrganizeId||a.F_OrganizeId==organize.F_ParentId);
+            }
+
             if (!string.IsNullOrEmpty(condition) && !string.IsNullOrEmpty(keyword))
             {
                 #region 多条件查询

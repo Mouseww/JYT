@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@LeaRun.Util.Config.GetValue("SystemName").ToString()</title>
+    @{ var organize=(LeaRun.Application.Entity.BaseManage.OrganizeEntity) Session["organize"]; }
     <link rel="icon" href="~/Content/images/favicon.ico">
     <link href="~/Content/styles/font-awesome.min.css" rel="stylesheet" />
     @System.Web.Optimization.Styles.Render("~/Content/styles/learun.css")
@@ -24,7 +26,14 @@
         <div id="main">
             <div id="main-hd">
                 <div id="main-hd-title">
+                    @if (organize == null) { 
                     <a>@LeaRun.Util.Config.GetValue("SystemName").ToString()</a>
+                    }
+                    else
+                    {
+                        
+                        <a>@organize.F_FullName;</a>
+                    }
                 </div>
                 <div style="float: right">
                     <ul id="topnav">

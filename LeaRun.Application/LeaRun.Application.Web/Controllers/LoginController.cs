@@ -64,6 +64,7 @@ namespace LeaRun.Application.Web.Controllers
         [AjaxOnly]
         public ActionResult OutLogin()
         {
+            
             LogEntity logEntity = new LogEntity();
             logEntity.F_CategoryId = 1;
             logEntity.F_OperateTypeId = ((int)OperationType.Exit).ToString();
@@ -174,7 +175,7 @@ namespace LeaRun.Application.Web.Controllers
                     }
                     else
                     {
-                        OrganizeEntity organize = new OrganizeBLL().GetEntity(userEntity.OrganizeId);
+                        OrganizeEntity organize = new OrganizeBLL().GetEntity(userEntity.F_OrganizeId);
                         Session["organize"] = organize;
                         operators.IsSystem = false;
                     }
@@ -235,7 +236,7 @@ namespace LeaRun.Application.Web.Controllers
                 smsModel.msg = "验证码 " + data + "，(请确保是本人操作且为本人手机，否则请忽略此短信)";
                 SmsHelper.SendSmsByJM(smsModel);
             }
-            return Success("获取成功。");
+            return Success("获取成功。");    
         }
         /// <summary>
         /// 注册账户
