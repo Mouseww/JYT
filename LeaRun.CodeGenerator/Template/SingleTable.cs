@@ -568,7 +568,10 @@ namespace LeaRun.CodeGenerator.Template
             sb.Append("        }\r\n");
             sb.Append("        #endregion\r\n\r\n");
 
-            sb.Append("        #region 获取数据\r\n");
+           
+
+
+        sb.Append("        #region 获取数据\r\n");
             if (baseConfigModel.gridModel.IsPage == true)
             {
                 sb.Append("        /// <summary>\r\n");
@@ -629,7 +632,7 @@ namespace LeaRun.CodeGenerator.Template
             sb.Append("        public ActionResult RemoveForm(string keyValue)\r\n");
             sb.Append("        {\r\n");
             sb.Append("            " + baseConfigModel.BusinesClassName.ToLower() + ".RemoveForm(keyValue);\r\n");
-            sb.Append("            return Success(\"删除成功。\");\r\n");
+            sb.Append("            return Success(\"1\");\r\n");
             sb.Append("        }\r\n");
             sb.Append("        /// <summary>\r\n");
             sb.Append("        /// 保存表单（新增、修改）\r\n");
@@ -643,7 +646,7 @@ namespace LeaRun.CodeGenerator.Template
             sb.Append("        public ActionResult SaveForm(string keyValue, " + baseConfigModel.EntityClassName + " entity)\r\n");
             sb.Append("        {\r\n");
             sb.Append("            " + baseConfigModel.BusinesClassName.ToLower() + ".SaveForm(keyValue, entity);\r\n");
-            sb.Append("            return Success(\"操作成功。\");\r\n");
+            sb.Append("            return Success(\"2。\");\r\n");
             sb.Append("        }\r\n");
             sb.Append("        #endregion\r\n");
             sb.Append("    }\r\n");

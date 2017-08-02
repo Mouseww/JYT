@@ -17,12 +17,12 @@ namespace LeaRun.Application.Entity.BaseManage
         /// 序号Id
         /// </summary>
         /// <returns></returns>
-        public int? id { get; set; }
+        public string id { get; set; }
         /// <summary>
         /// 最后一个父Id
         /// </summary>
         /// <returns></returns>
-        public int? parentId { get; set; }
+        public string parentId { get; set; }
         /// <summary>
         /// 所属父Id
         /// </summary>
@@ -42,7 +42,7 @@ namespace LeaRun.Application.Entity.BaseManage
         /// 取样标准
         /// </summary>
         /// <returns></returns>
-        public int? quYangBiaoZuen { get; set; }
+        public string quYangBiaoZuen { get; set; }
         /// <summary>
         /// des
         /// </summary>
@@ -52,27 +52,27 @@ namespace LeaRun.Application.Entity.BaseManage
         /// 种类
         /// </summary>
         /// <returns></returns>
-        public int? sort { get; set; }
+        public string sort { get; set; }
         /// <summary>
         /// 有效的合法的
         /// </summary>
         /// <returns></returns>
-        public int? valid { get; set; }
+        public string valid { get; set; }
         /// <summary>
         /// 输入人物
         /// </summary>
         /// <returns></returns>
-        public int? inputPersonId { get; set; }
+        public string inputPersonId { get; set; }
         /// <summary>
         /// 单元Id
         /// </summary>
         /// <returns></returns>
-        public int? unitId { get; set; }
+        public string unitId { get; set; }
         /// <summary>
         /// 叶子
         /// </summary>
         /// <returns></returns>
-        public int? isLeaf { get; set; }
+        public string isLeaf { get; set; }
         /// <summary>
         /// 检查1
         /// </summary>
@@ -101,7 +101,7 @@ namespace LeaRun.Application.Entity.BaseManage
         /// </summary>
         public override void Create()
         {
-            this.id = int.Parse(Guid.NewGuid().ToString());
+            this.id = Guid.NewGuid().ToString();
                                             }
         /// <summary>
         /// 编辑调用
@@ -109,7 +109,7 @@ namespace LeaRun.Application.Entity.BaseManage
         /// <param name="keyValue"></param>
         public override void Modify(string keyValue)
         {
-            this.id = int.Parse(keyValue);
+            this.id =keyValue;
                                             }
         #endregion
     }

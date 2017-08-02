@@ -7,6 +7,9 @@ using System.Text;
 using LeaRun.Util.WebControl;
 using System.Web.Mvc;
 using System.Collections.Generic;
+using System;
+
+
 
 namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
 {
@@ -229,7 +232,8 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult RemoveForm(string keyValue)
         {
             materialrootbll.RemoveForm(keyValue);
-            return Success("删除成功。");
+          
+            return Success("1");
         }
         /// <summary>
         /// 保存表单（新增、修改）
@@ -243,7 +247,8 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult SaveForm(string keyValue, materialRootEntity entity)
         {
             materialrootbll.SaveForm(keyValue, entity);
-            return Success("操作成功。");
+         
+            return Success("2");
         }
         #endregion
     }

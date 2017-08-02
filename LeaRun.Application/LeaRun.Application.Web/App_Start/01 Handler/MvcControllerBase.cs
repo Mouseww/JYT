@@ -40,6 +40,14 @@ namespace LeaRun.Application.Web
         /// <returns></returns>
         protected virtual ActionResult Success(string message)
         {
+            if (message == "1")
+            {
+                message = "删除成功。";
+            }
+            else if(message == "2")
+            {
+                message = "操作成功。";
+            }
             return Content(new AjaxResult { type = ResultType.success, message = message }.ToJson());
         }
         /// <summary>
