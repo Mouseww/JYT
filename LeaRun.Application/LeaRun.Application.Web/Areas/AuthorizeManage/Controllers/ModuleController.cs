@@ -89,7 +89,8 @@ namespace LeaRun.Application.Web.Areas.AuthorizeManage.Controllers
                 tree.AttributeValue = item.F_Target;
                 treeList.Add(tree);
             }
-            return Content(treeList.TreeToJson());
+            var tree2 = treeList.TreeToJson();
+            return Content(tree2);
         }
         /// <summary>
         /// 获取目录级功能列表 

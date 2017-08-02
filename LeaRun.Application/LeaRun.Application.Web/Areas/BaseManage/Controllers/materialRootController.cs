@@ -90,6 +90,11 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult GetTreeJson(string value)
         {
             var data = materialrootbll.GetList("").ToList();
+            if (Session["materialroot"] != null)
+            {
+                var materialroot = (materialRootEntity)Session["materialroot"];
+                data = data.FindAll(a => a.id == materialroot.id);
+            }
 
 
             //data = data.FindAll(a => a.parentIds == "1" || a.parentIds == null);
@@ -112,6 +117,7 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
                 tree.complete = true;
                 tree.hasChildren = hasChildren;
                 tree.parentId = item.parentId.ToString();
+                tree.img = "fa fa-cube";
                 // tree.Attribute = "F_Target";
                 //tree.AttributeValue = item.F_Target;
                 treeList.Add(tree);
