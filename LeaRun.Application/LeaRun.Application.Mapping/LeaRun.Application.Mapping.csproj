@@ -64,6 +64,7 @@
     <Compile Include="AccountMap.cs" />
     <Compile Include="AppManage\AppTemplatesMap.cs" />
     <Compile Include="AppManage\AppProjectMap.cs" />
+    <Compile Include="BaseManage\Base_PostMap.cs" />
     <Compile Include="BaseManage\CeShiMap.cs" />
     <Compile Include="BaseManage\Demo_ApplyMap.cs" />
     <Compile Include="CustomerManage\CashBalanceMap.cs" />

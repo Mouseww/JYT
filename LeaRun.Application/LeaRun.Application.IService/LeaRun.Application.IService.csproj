@@ -58,6 +58,7 @@
     <Compile Include="AuthorizeManage\IModuleColumnService.cs" />
     <Compile Include="AuthorizeManage\IModuleService.cs" />
     <Compile Include="AuthorizeManage\IPermissionService.cs" />
+    <Compile Include="BaseManage\Base_PostIService.cs" />
     <Compile Include="BaseManage\Demo_ApplyIService.cs" />
     <Compile Include="BaseManage\IDepartmentService.cs" />
     <Compile Include="BaseManage\IOrganizeService.cs" />

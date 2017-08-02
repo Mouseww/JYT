@@ -186,6 +186,7 @@
     <Compile Include="Areas\AuthorizeManage\Controllers\PermissionUserGroupController.cs" />
     <Compile Include="Areas\AuthorizeManage\Controllers\PermissionUserController.cs" />
     <Compile Include="Areas\BaseManage\BaseManageAreaRegistration.cs" />
+    <Compile Include="Areas\BaseManage\Controllers\Base_PostController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\Demo_ApplyController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\DepartmentController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\JobController.cs" />
@@ -892,6 +893,8 @@
     <Content Include="Areas\FlowManage\Views\Web.config" />
     <Content Include="Areas\FlowManage\Views\FlowMyProcess\ProcessEditForm.cshtml" />
     <Content Include="Areas\CustomerManage\Views\Chance\MapView.cshtml" />
+    <Content Include="Areas\BaseManage\Views\Base_Post\Base_PostForm.cshtml" />
+    <Content Include="Areas\BaseManage\Views\Base_Post\Base_PostIndex.cshtml" />
     <None Include="Properties\PublishProfiles\6.1.pubxml" />
     <Content Include="Areas\SystemManage\Views\Log\RemoveLog.cshtml" />
     <Content Include="Views\Utility\ExcelExportForm.cshtml" />
