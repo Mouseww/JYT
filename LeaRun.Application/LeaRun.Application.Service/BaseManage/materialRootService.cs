@@ -61,6 +61,7 @@ namespace LeaRun.Application.Service.BaseManage
         public IEnumerable<materialRootEntity> GetList(string queryJson)
         {
             var expression = LinqExtensions.True<materialRootEntity>();
+            if (queryJson != "") { 
             var queryParam = queryJson.ToJObject();
             //²éÑ¯Ìõ¼þ
             if (!queryParam["condition"].IsEmpty() && !queryParam["keyword"].IsEmpty())
@@ -81,6 +82,7 @@ namespace LeaRun.Application.Service.BaseManage
                     default:
                         break;
                 }
+            }
             }
             return this.BaseRepository().IQueryable(expression).ToList();
         }
