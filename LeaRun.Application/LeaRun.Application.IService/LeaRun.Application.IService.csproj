@@ -67,6 +67,7 @@
     <Compile Include="BaseManage\IPostService.cs" />
     <Compile Include="BaseManage\IJobService.cs" />
     <Compile Include="BaseManage\IUserGroupService.cs" />
+    <Compile Include="BaseManage\materialRootIService.cs" />
     <Compile Include="CustomerManage\ICashBalanceService.cs" />
     <Compile Include="CustomerManage\IChanceService.cs" />
     <Compile Include="CustomerManage\IExpensesService.cs" />

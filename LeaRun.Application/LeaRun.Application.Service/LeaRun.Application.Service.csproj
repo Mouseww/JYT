@@ -64,6 +64,7 @@
     <Compile Include="AuthorizeManage\AuthorizeService.cs" />
     <Compile Include="BaseManage\Base_PostService.cs" />
     <Compile Include="BaseManage\Demo_ApplyService.cs" />
+    <Compile Include="BaseManage\materialRootService.cs" />
     <Compile Include="CustomerManage\CashBalanceService.cs" />
     <Compile Include="CustomerManage\ChanceService.cs" />
     <Compile Include="CustomerManage\ExpensesService.cs" />
