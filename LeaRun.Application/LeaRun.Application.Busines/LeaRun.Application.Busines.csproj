@@ -74,6 +74,7 @@
     <Compile Include="AppManage\AppProjectBLL.cs" />
     <Compile Include="AuthorizeManage\AuthorizeBLL.cs" />
     <Compile Include="BaseManage\Demo_ApplyBLL.cs" />
+    <Compile Include="BaseManage\materialRootBLL.cs" />
     <Compile Include="CustomerManage\CashBalanceBLL.cs" />
     <Compile Include="CustomerManage\ChanceBLL.cs" />
     <Compile Include="CustomerManage\ExpensesBLL.cs" />

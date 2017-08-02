@@ -60,6 +60,7 @@
     <Compile Include="BaseEntity.cs" />
     <Compile Include="BaseManage\CeShiEntity.cs" />
     <Compile Include="BaseManage\Demo_ApplyEntity.cs" />
+    <Compile Include="BaseManage\materialRootEntity.cs" />
     <Compile Include="CustomerManage\CashBalanceEntity.cs" />
     <Compile Include="CustomerManage\ChanceEntity.cs" />
     <Compile Include="CustomerManage\ExpensesEntity.cs" />

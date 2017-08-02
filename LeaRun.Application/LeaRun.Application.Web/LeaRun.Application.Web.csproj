@@ -189,6 +189,7 @@
     <Compile Include="Areas\BaseManage\Controllers\Demo_ApplyController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\DepartmentController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\JobController.cs" />
+    <Compile Include="Areas\BaseManage\Controllers\materialRootController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\OrganizeController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\RoleController.cs" />
     <Compile Include="Areas\BaseManage\Controllers\UserController.cs" />
@@ -892,6 +893,8 @@
     <Content Include="Areas\FlowManage\Views\Web.config" />
     <Content Include="Areas\FlowManage\Views\FlowMyProcess\ProcessEditForm.cshtml" />
     <Content Include="Areas\CustomerManage\Views\Chance\MapView.cshtml" />
+    <Content Include="Areas\BaseManage\Views\materialRoot\materialRootForm.cshtml" />
+    <Content Include="Areas\BaseManage\Views\materialRoot\materialRootIndex.cshtml" />
     <None Include="Properties\PublishProfiles\6.1.pubxml" />
     <Content Include="Areas\SystemManage\Views\Log\RemoveLog.cshtml" />
     <Content Include="Views\Utility\ExcelExportForm.cshtml" />
