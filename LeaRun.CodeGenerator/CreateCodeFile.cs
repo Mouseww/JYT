@@ -83,23 +83,25 @@ namespace LeaRun.CodeGenerator
             #endregion
 
             #region 控制器
-            string controllerCode = strParam["controllerCode"].ToString();
+        
+           
             if (!strParam["controllerCode"].IsEmpty())
             {
-               
-                string controllerPath = baseConfigModel.OutputController + "\\Areas\\" + baseConfigModel.OutputAreas + "\\Controllers\\" + baseConfigModel.ControllerName + ".cs";
+                    string controllerCode = strParam["controllerCode"].ToString();
+                    string controllerPath = baseConfigModel.OutputController + "\\Areas\\" + baseConfigModel.OutputAreas + "\\Controllers\\" + baseConfigModel.ControllerName + ".cs";
                 if (!System.IO.File.Exists(controllerPath))
                 {
                     DirFileHelper.CreateFileContent(controllerPath, controllerCode);
                 }
             }
+           
             #endregion
 
             #region 列表页
-            string indexCode = strParam["indexCode"].ToString();
+  
             if (!strParam["indexCode"].IsEmpty())
             {
-                
+                string indexCode = strParam["indexCode"].ToString();
                 string indexPath = baseConfigModel.OutputController + "\\Areas\\" + baseConfigModel.OutputAreas + "\\Views\\" + CommonHelper.DelLastLength(baseConfigModel.ControllerName, 10) + "\\" + baseConfigModel.IndexPageName + ".cshtml";
                 if (!System.IO.File.Exists(indexPath))
                 {
@@ -109,10 +111,10 @@ namespace LeaRun.CodeGenerator
             #endregion
 
             #region 表单页
-            string formCode = strParam["formCode"].ToString();
+            
             if (!strParam["formCode"].IsEmpty())
             {
-              
+                string formCode = strParam["formCode"].ToString();
                 string formPath = baseConfigModel.OutputController + "\\Areas\\" + baseConfigModel.OutputAreas + "\\Views\\" + CommonHelper.DelLastLength(baseConfigModel.ControllerName, 10) + "\\" + baseConfigModel.FormPageName + ".cshtml";
                 if (!System.IO.File.Exists(formPath))
                 {
