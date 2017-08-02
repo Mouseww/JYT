@@ -156,21 +156,32 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult GetPageListJson(Pagination pagination, string queryJson)
         {
             var watch = CommonHelper.TimerStart();
-            var data = materialrootbll.GetList("");
+            var data = materialrootbll.GetPageList(pagination, queryJson).ToList();
+           var data2 = materialrootbll.GetList("");
             try {
                 var queryParam = queryJson.ToJObject();
                
                 if (queryParam["parentId"]!=null)
             {
+                    
                     var pname = queryParam["parentId"].ToString();
                    
-                    data = data.Where(a=>a.parentId.ToString()== pname);
+                    data = data2.Where(a=>a.parentId.ToString()== pname).ToList();
+
             }
+              
             }
             catch
             {
 
             }
+            for (int i = 0; i < data.Count(); i++)
+            {
+                try
+                {
+                    data[i].parentNames = data2.First(a => a.id == data[i].parentId).name;
+                }
+                catch { } }
             var jsonData = new
             {
                 rows = data,
