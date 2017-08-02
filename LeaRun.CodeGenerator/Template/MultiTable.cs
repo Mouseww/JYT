@@ -907,9 +907,11 @@ StringBuilder sbQuery = new StringBuilder();
             sb.Append("                    hidegrid: false\r\n");
             sb.Append("                });\r\n");
             sb.Append("            }\r\n");
+            sb.Append("            })\r\n");
+            sb.Append("            }\r\n");
 
             #endregion            sb.Append("        });\r\n");
- #region 20161117 查询 zhaoxf
+            #region 20161117 查询 zhaoxf
             if (bIsQuery)
             {
                 sb.Append("        //查询条件\r\n");
