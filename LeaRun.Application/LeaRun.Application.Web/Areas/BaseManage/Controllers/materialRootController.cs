@@ -194,9 +194,7 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
                         case "parentNames":              //种类
                             data = data2.Where(a => a.parentNames.Contains(pvalue)).ToList();
                             break;
-                        case "sort":              //种类
-                            data = data2.Where(a => a.sort.Contains(pvalue)).ToList();
-                            break;
+                      
                         default:
                             break;
 

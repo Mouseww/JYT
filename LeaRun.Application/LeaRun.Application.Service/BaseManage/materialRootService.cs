@@ -51,7 +51,7 @@ namespace LeaRun.Application.Service.BaseManage
                         break;
                 }
             }
-            return this.BaseRepository().FindList(expression,pagination);
+            return this.BaseRepository().FindList(expression,pagination).OrderBy(t =>t.sort).ToList();
         }
         /// <summary>
         /// 获取列表
