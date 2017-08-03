@@ -82,7 +82,7 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
             return Content(tree1);
         }
         /// <summary>
-        /// 区域列表 
+        /// 材料列表 
         /// </summary>
         /// <param name="value">当前主键</param>
         /// <returns>返回树形Json</returns>
@@ -90,11 +90,11 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         public ActionResult GetTreeJson(string value)
         {
             var data = materialrootbll.GetList("").ToList();
-            if (Session["materialroot"] != null)
-            {
-                var materialroot = (materialRootEntity)Session["materialroot"];
-                data = data.FindAll(a => a.id == materialroot.id);
-            }
+            //if (Session["materialroot"] != null)
+            //{
+            //    var materialroot = (materialRootEntity)Session["materialroot"];
+            //    data = data.FindAll(a => a.id == materialroot.id);
+            //}
 
 
             //data = data.FindAll(a => a.parentIds == "1" || a.parentIds == null);
@@ -103,7 +103,10 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
 
             if (!string.IsNullOrEmpty(value))
             {
-                data = data.TreeWhere(t => t.id.ToString().Contains(value), "F_ModuleId");
+                
+                    data = data.TreeWhere(t => t.id.ToString().Contains(value), "F_ModuleId");
+                
+               
             }
             var treeList = new List<TreeEntity>();
             foreach (materialRootEntity item in data)
@@ -169,16 +172,41 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
            var data2 = materialrootbll.GetList("");
             try {
                 var queryParam = queryJson.ToJObject();
-               
-                if (queryParam["parentId"]!=null)
-            {
-                    
-                    var pname = queryParam["parentId"].ToString();
-                   
-                    data = data2.Where(a=>a.parentId.ToString()== pname).ToList();
-
-            }
               
+                    var pname1 = queryParam["parentId"].ToString();
+
+                if (pname1 != "") {
+                    if (pname1== "1") {
+
+                    }
+                    else { 
+                    data = data2.Where(a=>a.parentId.ToString()== pname1).ToList();
+                }
+                }
+
+
+                if (queryParam["condition"] != null&& queryParam["keyword"] != null)
+                {
+                    var pname = queryParam["condition"].ToString();
+                    var pvalue = queryParam["keyword"].ToString();
+                    switch (pname)
+                    {
+
+                        case "name":              //种类
+                            data = data.Where(a => a.name.Contains(pvalue)).ToList();
+                            break;
+                        case "parentNames":              //种类
+                            data = data.Where(a => a.parentNames.Contains(pvalue)).ToList();
+                            break;
+                        case "sort":              //种类
+                            data = data.Where(a => a.sort.Contains(pvalue)).ToList();
+                            break;
+                        default:
+                            break;
+
+                    }
+                    
+                }
             }
             catch
             {
