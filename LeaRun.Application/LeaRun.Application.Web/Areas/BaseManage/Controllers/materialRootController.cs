@@ -123,7 +123,10 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
                 tree.img = "fa fa-cube";
                 // tree.Attribute = "F_Target";
                 //tree.AttributeValue = item.F_Target;
-                treeList.Add(tree);
+                if (hasChildren)
+                {
+                    treeList.Add(tree);
+                }
 
             }
             //表数据内循环异常
@@ -165,47 +168,56 @@ namespace LeaRun.Application.Web.Areas.BaseManage.Controllers
         /// <param name="queryJson">查询参数</param>
         /// <returns>返回分页列表Json</returns>
         [HttpGet]
-        public ActionResult GetPageListJson(Pagination pagination, string queryJson)
+        public ActionResult GetPageListJson(Pagination pagination, string queryJson= "{\"parentId\":\"3\",\"keyword\":\"\"}")
         {
             var watch = CommonHelper.TimerStart();
             var data = materialrootbll.GetPageList(pagination, queryJson).ToList();
            var data2 = materialrootbll.GetList("");
             try {
                 var queryParam = queryJson.ToJObject();
-              
-                    var pname1 = queryParam["parentId"].ToString();
-
-                if (pname1 != "") {
-                    if (pname1== "1") {
-
-                    }
-                    else { 
-                    data = data2.Where(a=>a.parentId.ToString()== pname1).ToList();
+                var pname = "";
+                var pvalue = "";
+                try { 
+                pname= queryParam["condition"].ToString();
+             pvalue = queryParam["keyword"].ToString();
                 }
-                }
-
-
-                if (queryParam["condition"] != null&& queryParam["keyword"] != null)
+                catch { }
+                if (pname!= "" && pvalue != "")
                 {
-                    var pname = queryParam["condition"].ToString();
-                    var pvalue = queryParam["keyword"].ToString();
+                   
                     switch (pname)
                     {
 
                         case "name":              //种类
-                            data = data.Where(a => a.name.Contains(pvalue)).ToList();
+                            data = data2.Where(a => a.name.Contains(pvalue)).ToList();
                             break;
                         case "parentNames":              //种类
-                            data = data.Where(a => a.parentNames.Contains(pvalue)).ToList();
+                            data = data2.Where(a => a.parentNames.Contains(pvalue)).ToList();
                             break;
                         case "sort":              //种类
-                            data = data.Where(a => a.sort.Contains(pvalue)).ToList();
+                            data = data2.Where(a => a.sort.Contains(pvalue)).ToList();
                             break;
                         default:
                             break;
 
                     }
-                    
+
+                }  else {
+
+
+                    var pname1 = queryParam["parentId"].ToString();
+
+                    if (pname1 != "")
+                    {
+                        if (pname1 == "1")
+                        {
+
+                        }
+                        else
+                        {
+                            data = data2.Where(a => a.parentId.ToString() == pname1).ToList();
+                        }
+                    }
                 }
             }
             catch

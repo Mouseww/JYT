@@ -18,7 +18,7 @@
     </div>
     <div id="container">
         <div id="side" >
-            <img id="icon-vension" src="~/Content/Images/icon_v_b_e.png" alt="企业版">
+           @* <img id="icon-vension" src="~/Content/Images/icon_v_b_e.png" alt="企业版">*@
             <div id="navDiv" style="overflow-y:auto;overflow-x:hidden;">
                 <ul  style="width:80px;" id="nav"></ul>
             </div>
@@ -27,12 +27,12 @@
             <div id="main-hd">
                 <div id="main-hd-title">
                     @if (organize == null) { 
-                    <a>@LeaRun.Util.Config.GetValue("SystemName").ToString()</a>
+                    <a>@LeaRun.Util.Config.GetValue("SoftName").ToString()</a>
                     }
                     else
                     {
                         
-                        <a>@organize.F_FullName;</a>
+                        <a>@organize.F_ShortName 施工现场管理系统</a>
                     }
                 </div>
                 <div style="float: right">
