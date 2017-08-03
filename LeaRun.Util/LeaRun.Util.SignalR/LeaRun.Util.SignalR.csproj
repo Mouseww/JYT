@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="bin\Debug\LeaRun.Util.SignalR.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +69,21 @@
       <Project>{07aa2566-d0e5-47af-a17d-3b1c6aee598d}</Project>
       <Name>LeaRun.Util</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="bin\Debug\LeaRun.Util.dll" />
+    <Content Include="bin\Debug\LeaRun.Util.Extension.dll" />
+    <Content Include="bin\Debug\LeaRun.Util.Extension.pdb" />
+    <Content Include="bin\Debug\LeaRun.Util.pdb" />
+    <Content Include="bin\Debug\LeaRun.Util.SignalR.dll" />
+    <Content Include="bin\Debug\LeaRun.Util.SignalR.pdb" />
+    <Content Include="bin\Debug\LeaRun.Util.xml" />
+    <Content Include="bin\Debug\Microsoft.AspNet.SignalR.Client.dll" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

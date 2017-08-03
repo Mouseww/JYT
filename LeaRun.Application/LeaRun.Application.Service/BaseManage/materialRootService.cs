@@ -84,7 +84,7 @@ namespace LeaRun.Application.Service.BaseManage
                 }
             }
             }
-            return this.BaseRepository().IQueryable(expression).ToList();
+            return this.BaseRepository().IQueryable(expression).ToList().OrderBy(t => t.sort).ToList();
         }
         /// <summary>
         /// 获取实体

@@ -55,6 +55,12 @@
     <Compile Include="ICache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\LeaRun.Cache.dll" />
+    <Content Include="bin\Debug\LeaRun.Cache.pdb" />
+    <Content Include="bin\Release\LeaRun.Cache.dll" />
+    <Content Include="bin\Release\LeaRun.Cache.pdb" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

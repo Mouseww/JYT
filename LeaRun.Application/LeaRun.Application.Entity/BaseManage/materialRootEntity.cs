@@ -52,7 +52,7 @@ namespace LeaRun.Application.Entity.BaseManage
         /// 种类
         /// </summary>
         /// <returns></returns>
-        public string sort { get; set; }
+        public int? sort { get; set; }
         /// <summary>
         /// 有效的合法的
         /// </summary>
