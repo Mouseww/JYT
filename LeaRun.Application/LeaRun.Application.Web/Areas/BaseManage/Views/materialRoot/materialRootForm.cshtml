@@ -3,12 +3,16 @@
     Layout = "~/Views/Shared/_Form.cshtml";
 }
 <script>
+   var id = "";
     var keyValue = request('keyValue');
     $(function () {
         initControl();
+        cli();
+       
     });
     //初始化控件
     function initControl() {
+
         //父类型 材料所属分类
         $("#ParentId").ComboBoxTree({
             url: "../../BaseManage/materialRoot/GetTreeJson",
@@ -22,7 +26,12 @@
                 url: "../../BaseManage/materialRoot/GetFormJson",
                 param: { keyValue: keyValue },
                 success: function (data) {
+                    //var data1 = JSON.parse(data);
+                  
                     $("#form1").SetWebControls(data);
+                    id = "#"+$('.bbit-tree-node-expanded').attr('id').split("_")[0] + "_" + data.parentId;
+                 
+                    
                 }
             })
             //} else {
@@ -30,6 +39,7 @@
             //}
         }
     }
+   
     //保存表单;
     function AcceptClick() {
         if (!$('#form1').Validform()) {
@@ -45,11 +55,13 @@
             }
         })
     }
-    $(function () {
+   function cli() {
      
         $('.bbit-tree-ec-icon').click();
         $('.bbit-tree-ec-icon').eq(1).click();
-    })
+        $(id).click();
+        //$('.ui-select-text').eq(1).click()
+    }
 </script>
 <div style="margin-top: 20px; margin-right: 30px;">
     <table class="form">
@@ -100,7 +112,7 @@
         <tr>
             <td class="formTitle">状态</td>
             <td class="formValue">
-                <select id="sort" type="text" class="form-control">
+                <select id="state" type="text" class="form-control">
                     <option value="请选择">==请选择==</option>
                     <option value="有效">有效</option>
                     <option value="无效">无效</option>
